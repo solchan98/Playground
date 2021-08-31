@@ -5,13 +5,12 @@ import app.domain.UserDTO;
 import app.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import app.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +42,12 @@ public class UserController {
         String token = jwtTokenProvider.createToken(member.getEmail(), member.getRoles());
         response.setHeader("authorization", "bearer " + token);
         return ResponseEntity.ok().body("로그인 성공!");
+    }
 
+    // JWT 인증 요청 테스트
+    @GetMapping("/test")
+    public String test(HttpServletRequest request) {
+        return "Hello, User?";
     }
 
     // 통합 예외 핸들러

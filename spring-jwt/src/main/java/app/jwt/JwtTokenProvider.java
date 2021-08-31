@@ -1,13 +1,17 @@
 package app.jwt;
 
+import app.service.CustomUserDetailService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +26,10 @@ public class JwtTokenProvider {
     // 토큰 유효시간 | 30min
     private long tokenValidTime = 30 * 60 * 1000L;
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailService customUserDetailService;
 
-    // 의존성 주입 후, 초기화를 수행하는 메서드
-    // 키 해
+    // 의존성 주입 후, 초기화를 수행
+    // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -45,11 +49,31 @@ public class JwtTokenProvider {
                 .compact(); // 생성
     }
 
-    // TODO 토큰에서 인증정보 조회
+    // JWT 토큰에서 인증 정보 조회
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserEmail(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
 
-    // TODO 토큰에서 회원정 추출
+    // 토큰에서 회원 정보 추출
+    public String getUserEmail(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
 
-    // TODO 요청 헤더에서 토큰 추출
+    // Request의 Header에서 token 값을 가져옵니다. "authorization" : "token'
+    public String resolveToken(HttpServletRequest request) {
+        if(request.getHeader("authorization") != null )
+            return request.getHeader("authorization").substring(7);
+        return null;
+    }
 
-    // TODO 토큰의 유효성 확인
+    // 토큰의 유효성 + 만료일자 확인
+    public boolean validateToken(String jwtToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
