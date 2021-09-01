@@ -34,6 +34,10 @@ public class UserService {
     }
 
     public boolean checkPassword(User member, UserDTO user) {
-        return passwordEncoder.matches(user.getPassword(), member.getPassword());
+        boolean result = passwordEncoder.matches(user.getPassword(), member.getPassword());
+        if(!result)
+            throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+        return true;
+        //return passwordEncoder.matches(user.getPassword(), member.getPassword());
     }
 }

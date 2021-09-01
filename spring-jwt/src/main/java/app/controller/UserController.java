@@ -33,11 +33,8 @@ public class UserController {
     public ResponseEntity login(@RequestBody UserDTO user, HttpServletResponse response) {
         // 유저 존재 확인
         User member = userService.findUser(user);
-        boolean checkResult = userService.checkPassword(member, user);
         // 비밀번호 체크
-        if(!checkResult) {
-            throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
-        }
+        userService.checkPassword(member, user);
         // 토큰 생성 및 응답
         String token = jwtTokenProvider.createToken(member.getEmail(), member.getRoles());
         response.setHeader("authorization", "bearer " + token);
