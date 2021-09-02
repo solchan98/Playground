@@ -15,4 +15,9 @@ public class RedisService {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         values.set(name, age);
     }
+
+    public String getValues(String name){
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        return values.get(name);
+    }
 }
