@@ -16,7 +16,7 @@ public class RedisService {
     public void setValues(String name, String age){
         ValueOperations<String, String> values = redisTemplate.opsForValue();
 //        values.set(name, age);
-        values.set(name, age, Duration.ofMinutes(1)); // 1분 뒤 메모리에서 삭제된다.
+        values.set(name, age, Duration.ofMinutes(1));  // 1분 뒤 메모리에서 삭제된다.
     }
 
     public String getValues(String name){
