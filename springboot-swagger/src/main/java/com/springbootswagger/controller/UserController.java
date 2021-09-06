@@ -8,7 +8,6 @@ import com.springbootswagger.service.RedisService;
 import com.springbootswagger.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +83,6 @@ public class UserController {
     // 나의 정보 조회
     @ApiOperation(value = "나의 정보 조회", notes = "나의 정보 조회하기")
     @ApiResponses({
-//            @ApiResponse(code = 200, message = user),
             @ApiResponse(code = 500, message = "서버에서 문제가 발생하였습니다.")})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true,
