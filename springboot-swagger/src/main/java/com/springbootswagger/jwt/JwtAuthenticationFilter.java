@@ -1,4 +1,4 @@
-package redis.jwt;
+package com.springbootswagger.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

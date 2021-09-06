@@ -1,5 +1,7 @@
-package redis.config;
+package com.springbootswagger.config;
 
+import com.springbootswagger.jwt.JwtAuthenticationFilter;
+import com.springbootswagger.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import redis.jwt.JwtAuthenticationFilter;
-import redis.jwt.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity

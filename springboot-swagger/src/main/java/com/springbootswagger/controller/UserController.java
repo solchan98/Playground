@@ -1,17 +1,19 @@
-package redis.controller;
+package com.springbootswagger.controller;
 
+import com.springbootswagger.domain.User;
+import com.springbootswagger.domain.UserDTO;
+import com.springbootswagger.jwt.JwtTokenProvider;
+import com.springbootswagger.service.RedisService;
+import com.springbootswagger.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import redis.domain.User;
-import redis.domain.UserDTO;
-import redis.jwt.JwtTokenProvider;
-import redis.service.RedisService;
-import redis.service.UserService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,6 +48,7 @@ public class UserController {
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
+
         // Redis 인메모리에 리프레시 토큰 저장
         redisService.setValues(refreshToken, member.getEmail());
         // 리프레시 토큰 저장소에 저장
@@ -61,10 +64,10 @@ public class UserController {
         return ResponseEntity.ok().body("로그아웃 성공!");
     }
 
-    // JWT 인증 요청 테스트
-    @GetMapping("/test")
-    public String test(HttpServletRequest request) {
-        return "Hello, User?";
+    // 나의 정보 조회
+    @GetMapping("/profile")
+    public UserDTO test(@AuthenticationPrincipal User user) {
+        return userService.getProfile(user);
     }
 
 }

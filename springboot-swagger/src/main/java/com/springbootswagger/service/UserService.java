@@ -1,12 +1,11 @@
-package redis.service;
+package com.springbootswagger.service;
 
+import com.springbootswagger.domain.User;
+import com.springbootswagger.domain.UserDTO;
+import com.springbootswagger.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import redis.domain.User;
-import redis.domain.UserDTO;
-import redis.domain.UserRepository;
-
 import java.util.Collections;
 
 @Service
@@ -21,6 +20,8 @@ public class UserService {
                 User.builder()
                         .email(user.getEmail())
                         .password(passwordEncoder.encode(user.getPassword()))
+                        .birth(user.getBirth())
+                        .phone(user.getPhone())
                         .roles(Collections.singletonList("ROLE_USER"))
                         .build())
                 .getId();
@@ -39,5 +40,13 @@ public class UserService {
             throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
         return true;
         //return passwordEncoder.matches(user.getPassword(), member.getPassword());
+    }
+
+    public UserDTO getProfile(User user) {
+        return UserDTO.builder()
+                .email(user.getEmail())
+                .birth(user.getBirth())
+                .phone(user.getPhone())
+                .build();
     }
 }

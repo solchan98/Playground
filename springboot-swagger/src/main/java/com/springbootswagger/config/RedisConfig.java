@@ -1,4 +1,4 @@
-package redis.config;
+package com.springbootswagger.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,11 +1,11 @@
-package redis.service;
+package com.springbootswagger.service;
 
+import com.springbootswagger.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import redis.domain.UserRepository;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package redis.domain;
+package com.springbootswagger.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package redis.domain;
+package com.springbootswagger.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +30,12 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String birth;
+
+    @Column
+    private String phone;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

@@ -1,5 +1,8 @@
-package redis.jwt;
+package com.springbootswagger.jwt;
 
+import com.springbootswagger.domain.UserRepository;
+import com.springbootswagger.service.CustomUserDetailService;
+import com.springbootswagger.service.RedisService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import redis.domain.UserRepository;
-import redis.service.CustomUserDetailService;
-import redis.service.RedisService;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
