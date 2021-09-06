@@ -30,7 +30,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     runtimeOnly 'com.h2database:h2'
+    // [SWAGGER-1]
+    compileOnly group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compileOnly group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     testImplementation 'org.springframework.security:spring-security-test'
+
 }
 
 test {
