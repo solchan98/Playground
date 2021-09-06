@@ -28,14 +28,14 @@ public class UserService {
         return userId;
     }
 
-    public User findUser(UserDTO user) {
-        User member = userRepository.findByEmail(user.getEmail())
+    public User findUserByEmail(String email) {
+        User member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다."));
         return member;
     }
 
-    public boolean checkPassword(User member, UserDTO user) {
-        boolean result = passwordEncoder.matches(user.getPassword(), member.getPassword());
+    public boolean checkPassword(String memberPassword, String password) {
+        boolean result = passwordEncoder.matches(password, memberPassword);
         if(!result)
             throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
         return true;
