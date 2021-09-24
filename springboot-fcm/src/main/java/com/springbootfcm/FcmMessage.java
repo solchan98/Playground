@@ -1,6 +1,5 @@
 package com.springbootfcm;
 
-import com.google.firebase.messaging.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
