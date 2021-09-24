@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -52,7 +51,6 @@ public class FirebaseCloudMessageService {
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
-
 
     private String getAccessToken() throws IOException {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
