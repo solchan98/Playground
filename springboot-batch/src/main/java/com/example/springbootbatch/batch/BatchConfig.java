@@ -14,8 +14,6 @@ import org.springframework.batch.item.*;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,11 +25,6 @@ public class BatchConfig {
     private final AccountRepository accountRepository;
     private final StepBuilderFactory stepBuilderFactory;
     private final JobBuilderFactory jobBuilderFactory;
-
-    @Bean
-    public LocalDateTime localDateTime() {
-        return LocalDateTime.now();
-    }
 
     @Bean(name = "test1")
     public Job myJob() {
@@ -58,7 +51,6 @@ public class BatchConfig {
                 .start(mystep2())
                 .incrementer(new RunIdIncrementer())
                 .build();
-
     }
 
     @Bean
