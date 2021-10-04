@@ -58,3 +58,8 @@ W: 지정 일에서 가장 가까운 평일을 찾는다 (일에서만 사용가
 @Configuration으로 설정파일임을 등록하고, @EnableScheduling 스케줄러 사용을 등록한다.
 
 이후 스케줄러로 사용할 쓰레드를 설정해준다.
+
+---
+
+[스프링 Scheduler 사용법](http://jmlim.github.io/spring/2018/11/27/spring-boot-schedule/)  
+[cron(여기 예제 다 틀림 사용법만 보기)](https://itworldyo.tistory.com/40?category=966337)
