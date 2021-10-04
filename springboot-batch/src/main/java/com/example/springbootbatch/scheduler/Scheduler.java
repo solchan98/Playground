@@ -25,9 +25,15 @@ public class Scheduler {
         this.job2 = job2;
     }
 
-    @Scheduled(cron = "0/2 * * * * *")
-    public void loggingAccount() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    @Scheduled(cron = "0/5 * * * * *")
+    public void loggingAccount1() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         Date date = new Date();
         jobLauncher.run(job1, new JobParametersBuilder().addString("date", String.valueOf(date)).toJobParameters());
+    }
+
+    @Scheduled(cron = "0/5 * * * * *")
+    public void loggingAccount2() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        Date date = new Date();
+        jobLauncher.run(job2, new JobParametersBuilder().addString("date", String.valueOf(date)).toJobParameters());
     }
 }
