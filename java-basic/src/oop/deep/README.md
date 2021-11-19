@@ -184,16 +184,109 @@ public class OverLoadingAndRiding {
 오버로딩과 오버라이팅의 차이는 다음과 같다.
 
 - 오버로딩 - 기존에 없는 새로운 메서드를 정의하는 것이다.
-    - **point 새로 만든다!!!**
+  - **새로 만든다!!!**
 - 오버라이딩 - 상속받은 메서드의 내용을 변경하는 것.
-    - **point 이미 있는 메서드를 수정한다!!!**
+  - **이미 있는 메서드를 수정한다!!!**
 
-## 제어자
+## 다형성
 
-우리는 이전 기본 정리파트에서 public이라는 키워드를 본 적이 있었다.
+다형성이란 한 타입의 참조변수로 여러타입의 인스턴스를 참조할 수 있는 것을 말한다.
 
-앞에서 설명하진 않았지만, 그 만큼 클래스에서 필수적으로 사용이 된다는 뜻이다.
+객체지향개념에서 상속과 마찬가지로 중요한 특징 중의 하나이다.
 
-## 인터페이스
+다형성을 사용하기위해 알아야 하는 여러가지 조건이 있지만, 다음의 내용만 기억한다면 당연한 것들이기 때문에 아래의 조건만 잘 기억하자.
+
+1. 참조변수는 인스턴스 기준, 부모 혹은 본인의 타입이어야 한다.
+  1. 인스턴스의 자식 클래스 타입은 ❌
+2. 호출할 수 있는 메서드나 멤버변수는 참조변수 기준이다.
+  1. 이전에 부모-자식 클래스는 포함관계라고 설명하였다.
+  2. 사용 된 참조변수 기준, 즉 부모 클래스 기준이다.
+3. 형변환은 참조변수 기준이며, Down-casting ❌
+
+가전제품과 TV, 냉장고, 세탁기 시나리오를 통해 다형성을 확인해보자
+
+```jsx
+/** 가전제품 - 부모클래스 */
+class Product {
+    public String name;
+    public int price;
+    public Product(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+    public void sayMyInfo() {
+        System.out.println("명칭: " + this.name + ", 가격: " + this.price);
+    }
+}
+
+/** TV - 자식클래스 */
+class Tv extends Product {
+    public int inch;
+    public Tv(String name, int price, int inch) {
+        super(name, price);
+        this.inch = inch;
+    }
+}
+
+/** 냉장고 - 자식클래스 */
+class Fridge extends Product {
+    public int capacity;
+    public Fridge(String name, int price, int capacity) {
+        super(name, price);
+        this.capacity = capacity;
+    }
+}
+
+/** 세탁기 - 자식클래스 */
+class Washer extends Product {
+    public String type;
+    public Washer(String name, int price, String type) {
+        super(name, price);
+        this.type = type;
+    }
+}
+
+public class Polymorphism {
+    public static void main(String[] args) {
+        Product tv = new Tv("4K", 5000000, 60);
+        Product fridge = new Fridge("Bespoke", 1500000, 120);
+        Product washer = new Washer("LG", 800000, "Drum");
+        
+        tv.sayMyInfo();
+        fridge.sayMyInfo();
+        washer.sayMyInfo();
+    }
+}
+```
+
+👆 코드를 보면 모든 자식 클래스의 **참조변수가 부모 클래스인 Product**이다.
+
+따라서 자식 클래스의 멤버변수 및 메서드는 사용할 수 없고, 위 처럼 product의 멤버변수 및 메서드만 사용이 가능하다.
+
+이렇게 사용하면, **자식 클래스의 메서드는 사용이 불가능한데 왜 이렇게 하는 것이죠?**
+
+배열과 반복문을 통해 **공통의 로직을 하나의 코드로 작성하여 처리**할 수 있기 때문이다.
+
+**즉, 여러 객체를 마치 하나의 객체처럼 다룰 수 있다.**
+
+```jsx
+public class Polymorphism {
+    public static void main(String[] args) {
+        Product tv = new Tv("4K", 5000000, 60);
+        Product fridge = new Fridge("Bespoke", 1500000, 120);
+        Product washer = new Washer("LG", 800000, "Drum");
+
+        Product[] productList = new Product[]{tv, fridge, washer};
+        for(Product product: productList) {
+            product.sayMyInfo();
+        }
+    }
+}
+```
+
+👆코드를 보면 배열과 반복문을 통해 코드를 간단하게 표현할 수 있다.
+
+지금은 참조변수가 3개라 큰 차이가 없을지 모르지만, 만약 100개의  참조변수가 sayMyInfo()를 호출한다고 하면 100개의 코드 라인을 단 4줄로 표현할 수 있는 것이다.
+
 
 ## 추상클래스와 내부클래스
