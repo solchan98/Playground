@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="메인 테스트임돵" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-11-23T07:49:27" hostname="Sol.local" time="0.014">
+<testsuite name="메인 테스트임돵" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-11-25T08:01:08" hostname="Sol.local" time="0.014">
   <properties/>
-  <testcase name="테스트 1번 &#x1f632;" classname="Main" time="0.011"/>
-  <testcase name="테스트 2번 &#x1f632;" classname="Main" time="0.002"/>
-  <system-out><![CDATA[Before All
-
-Before Each
-Test - 1 Success
-After Each
-
-Before Each
-Test - 2 Success
-After Each
-
-After All
-
+  <testcase name="계좌 시나리오 - 잔고 이상의 출금을 요청하는가?" classname="Main" time="0.014"/>
+  <system-out><![CDATA[잔고가 부족합니다.
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
