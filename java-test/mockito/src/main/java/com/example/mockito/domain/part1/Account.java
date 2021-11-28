@@ -1,4 +1,4 @@
-package com.example.mockito.domain;
+package com.example.mockito.domain.part1;
 
 public class Account {
     private String name;
