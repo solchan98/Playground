@@ -35,7 +35,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.1'
 
 	// [QueryDSL]
-	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
