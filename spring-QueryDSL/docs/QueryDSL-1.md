@@ -72,7 +72,7 @@ Q클래스를 만드는 법은 다음과 같다.
 위 과정을 정상적으로 진행하였다면 gradle에 설정한대로 build/generated에 Q클래스가 생성된 것을 확인할 수 있다.  
 
 ## 간단하게 사용해보기
-기본적인 사용예시만 다룰 것이며 여러 예제는 [GitHub]()를 참고하면 확인할 수 있다.  
+기본적인 사용예시만 다룰 것이며 여러 예제는 [GitHub](https://github.com/solchan98/spring-playground/blob/main/spring-QueryDSL/src/test/java/com/springquerydsl/QueryDslTest.java)를 참고하면 확인할 수 있다.  
 
 개인적으로 초기 설정만 마무리 했다면 사용하기는 오히려 SpringDataJPA보다 더 좋은 것 같다.  
 일단, JpaQueryFactory를 컨테이너에 Bean으로 등록해야 한다. 이때 EntityManager이 필요하다.  
