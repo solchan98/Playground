@@ -1,4 +1,5 @@
-README.md
+src/main/resources/*
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
