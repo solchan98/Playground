@@ -18,10 +18,20 @@ public class Store {
 
     private String name;
 
+    private Long score;
+
     @OneToMany(mappedBy = "store")
     private final List<Item> itemList = new ArrayList<>();
 
-    public Store (String name) {
+    public Store (String name, Long score) {
         this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "Store{" +
+                "id=" + id +
+                ", name='" + name + '}';
     }
 }

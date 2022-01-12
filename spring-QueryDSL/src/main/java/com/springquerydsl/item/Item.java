@@ -34,4 +34,15 @@ public class Item {
         this.store = store;
         store.getItemList().add(this);
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", store=" + store +
+                '}';
+    }
 }
