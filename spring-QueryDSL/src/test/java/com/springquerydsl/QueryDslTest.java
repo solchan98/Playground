@@ -1,10 +1,12 @@
 package com.springquerydsl;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.springquerydsl.item.Item;
+import com.springquerydsl.item.ItemDto;
 import com.springquerydsl.item.ItemRepository;
 import com.springquerydsl.store.Store;
 import com.springquerydsl.store.StoreRepository;
@@ -235,5 +237,19 @@ public class QueryDslTest {
                 () -> assertEquals(2, result.stream().filter((str) -> Objects.equals(str, "적당해")).count()),
                 () -> assertEquals(2, result.stream().filter((str) -> Objects.equals(str, "비싸")).count())
         );
+    }
+
+    // DTO
+    @Test
+    @DisplayName("Projections, join - DTO")
+    void dto1() {
+        List<ItemDto> fetch = queryFactory
+                .select(Projections.fields(ItemDto.class,
+                        item.name, item.price, store.name.as("storeName")))
+                /* as를 통해 ItemDto 필드의 명과 동일하게 만들면 매핑이 된다! */
+                .from(item)
+                .join(item.store, store)
+                .fetch();
+        fetch.forEach(System.out::println);
     }
 }

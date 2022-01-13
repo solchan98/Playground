@@ -5,4 +5,5 @@
 [QueryDSL-1] 기본적인 Query를 QueryDSL로 사용해보기  
 [QueryDSL-2] Join을 통한 좀 더 복잡한 Query를 QueryDSL로 사용해보기  
 [QueryDSL-3] Entity가 아닌 DTO로 조회해보기  
-[QueryDSL-4] Test가 아닌 QueryDSL Repository 구조 적용해보기  
+[QueryDSL-4] 동적 쿼리 작성해보기  
+[QueryDSL-5] Test가 아닌 QueryDSL Repository 구조 적용해보기  
