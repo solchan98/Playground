@@ -252,4 +252,12 @@ public class QueryDslTest {
                 .fetch();
         fetch.forEach(System.out::println);
     }
+
+    // Spring Data JPA와 QueryDSL 같이 사용하기
+    @Test
+    @DisplayName("Spring Data JPA와 QueryDSL 같이 사용하기")
+    void useQueryDslWithSpringDataJpa() {
+        Item 치약 = itemRepository.findByNameAndPrice("치약", 3000L);
+        assertEquals("이마트", 치약.getStore().getName());
+    }
 }
