@@ -9,6 +9,7 @@ import com.springquerydsl.item.Item;
 import com.springquerydsl.item.ItemDto;
 import com.springquerydsl.item.ItemRepository;
 import com.springquerydsl.store.Store;
+import com.springquerydsl.store.StoreDto;
 import com.springquerydsl.store.StoreRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 import static com.springquerydsl.item.QItem.item;
 import static com.springquerydsl.store.QStore.store;
 import static org.junit.jupiter.api.Assertions.*;
@@ -259,5 +264,31 @@ public class QueryDslTest {
     void useQueryDslWithSpringDataJpa() {
         Item 치약 = itemRepository.findByNameAndPrice("치약", 3000L);
         assertEquals("이마트", 치약.getStore().getName());
+    }
+
+    // DTO - StoreDTO(1): ItemDTO(N)
+    @Test
+    @DisplayName("1대N 관계 DTO로 조회 - Aggregation")
+    void dto2() {
+        Map<StoreDto, List<ItemDto>> storeDtoMap = queryFactory
+                .from(store)
+                .leftJoin(store.itemList, item).on(item.price.lt(5000L))
+                .transform(groupBy(Projections.fields(StoreDto.class,
+                        store.id, store.name)).as(list(
+                        Projections.fields(ItemDto.class,
+                                item.name, store.name.as("storeName"), item.price)
+                )));
+
+        List<StoreDto> storeDtoList = storeDtoMap.entrySet().stream()
+                .map(entry -> {
+                    entry.getKey().getItemList().addAll(entry.getValue());
+                    return entry.getKey();
+                }).collect(Collectors.toList());
+
+        assertAll(
+                () -> assertEquals(2, storeDtoList.size()), // 마트 개수
+                () -> assertEquals(2, storeDtoList.get(0).getItemList().size()), // 이마트 아이템 개수
+                () -> assertEquals(2, storeDtoList.get(1).getItemList().size()) // 롯데마트 아이템 개수
+        );
     }
 }
