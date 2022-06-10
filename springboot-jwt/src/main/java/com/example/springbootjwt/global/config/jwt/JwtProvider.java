@@ -1,8 +1,13 @@
 package com.example.springbootjwt.global.config.jwt;
 
+import com.example.springbootjwt.domain.user.service.CustomAccountDetailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -10,8 +15,10 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
+    private final CustomAccountDetailService customAccountDetailService;
     private String SECRET_KEY = "jwt";
     private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
 
@@ -34,4 +41,22 @@ public class JwtProvider {
                 .compact(); // 생성
     }
 
+    public Authentication validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return getAuthentication(token);
+        } catch (Exception e) {
+            // TODO: 예외 별 처리 예정
+            return null;
+        }
+    }
+
+    private Authentication getAuthentication(String token) {
+        UserDetails userDetails = customAccountDetailService.loadUserByUsername(getUserEmail(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public String getUserEmail(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+    }
 }
