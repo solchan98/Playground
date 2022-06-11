@@ -18,6 +18,13 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
+    public LoginResponseDto reIssueAccessToken(String email, String refreshToken) {
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new BadRequestException("존재하지 않는 유저입니다."));
+        jwtProvider.checkRefreshToken(email, refreshToken);
+        String accessToken = jwtProvider.createAccessToken(account.getEmail(), account.getRole());
+        return new LoginResponseDto(accessToken, refreshToken);
+    }
+
     @Transactional
     public LoginResponseDto login(String email, String password) {
         Account account = accountRepository

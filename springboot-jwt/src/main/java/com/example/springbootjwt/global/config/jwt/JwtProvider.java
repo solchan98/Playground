@@ -1,6 +1,7 @@
 package com.example.springbootjwt.global.config.jwt;
 
 import com.example.springbootjwt.domain.user.service.CustomAccountDetailsService;
+import com.example.springbootjwt.global.common.exception.BadRequestException;
 import com.example.springbootjwt.global.common.redis.RedisService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,13 @@ public class JwtProvider {
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
+    public void checkRefreshToken(String userId, String refreshToken) {
+        String redisRT = redisService.getValues(userId);
+        if (!refreshToken.equals(redisRT)) {
+            throw new BadRequestException("토큰이 만료되었습니다.");
+        }
     }
 
     public String createAccessToken(String userId, String roles) {

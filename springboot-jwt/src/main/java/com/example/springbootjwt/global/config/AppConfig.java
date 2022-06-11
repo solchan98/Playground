@@ -21,7 +21,6 @@ public class AppConfig {
     private final JwtProvider jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -36,7 +35,7 @@ public class AppConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 X
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/sign-up", "/api/v1/user/login").permitAll()
+                .antMatchers("/api/v1/user/sign-up", "/api/v1/user/login", "/api/v1/user/re-issue").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
