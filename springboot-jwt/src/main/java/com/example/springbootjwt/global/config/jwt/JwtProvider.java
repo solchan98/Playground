@@ -25,6 +25,9 @@ public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String secretKey;
 
+    @Value("${spring.jwt.blacklist.access-token}")
+    private String blackListATPrefix;
+
     // 의존성 주입 후, 초기화를 수행
     // 객체 초기화, secretKey Base64로 인코딩한다.
     @PostConstruct
@@ -33,9 +36,8 @@ public class JwtProvider {
     }
 
     public void logout(String userId, String accessToken) {
-        String prefix = "BlackList_AccessToken_";
         long expiredAccessTokenTime = getExpiredTime(accessToken).getTime() - new Date().getTime();
-        redisService.setValues(prefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
+        redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
         redisService.deleteValues(userId); // Delete RefreshToken In Redis
     }
 
@@ -73,9 +75,8 @@ public class JwtProvider {
 
     public Authentication validateToken(HttpServletRequest request, String token) {
         String exception = "exception";
-        String prefix = "BlackList_AccessToken_";
         try {
-            String expiredAT = redisService.getValues(prefix + token);
+            String expiredAT = redisService.getValues(blackListATPrefix + token);
             if (expiredAT != null) {
                 // TODO: 아래 catch에 걸리며 "토큰 만료" 에러메시지 무의미, 리팩토링 예정
                 throw new BadRequestException("토큰 만료");

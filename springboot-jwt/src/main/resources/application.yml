@@ -17,6 +17,8 @@ spring:
     host: localhost
   jwt:
     secret-key: SECRET_KEY
+    blacklist:
+      access-token: BlackList_AccessToken_
 
 server:
   port: 8080
