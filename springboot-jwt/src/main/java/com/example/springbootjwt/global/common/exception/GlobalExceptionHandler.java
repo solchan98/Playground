@@ -1,5 +1,6 @@
 package com.example.springbootjwt.global.common.exception;
 
+import com.example.springbootjwt.global.common.dto.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionDto> handle(BadRequestException e) {
-        ExceptionDto exceptionDto = new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<BasicResponse> handle(BadRequestException e) {
+        BasicResponse exceptionDto = new BasicResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 }

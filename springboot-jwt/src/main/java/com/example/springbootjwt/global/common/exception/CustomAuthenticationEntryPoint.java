@@ -1,5 +1,6 @@
 package com.example.springbootjwt.global.common.exception;
 
+import com.example.springbootjwt.global.common.dto.BasicResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         String exception = (String) request.getAttribute("exception");
         setResponse(response);
-        ExceptionDto exceptionDto = new ExceptionDto(exception, HttpStatus.FORBIDDEN);
+        BasicResponse exceptionDto = new BasicResponse(exception, HttpStatus.FORBIDDEN);
         response.getWriter().print(convertObjectToJson(exceptionDto));
     }
 

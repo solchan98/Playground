@@ -4,6 +4,7 @@ import com.example.springbootjwt.domain.user.domain.dto.LoginRequestDto;
 import com.example.springbootjwt.domain.user.domain.dto.LoginResponseDto;
 import com.example.springbootjwt.domain.user.domain.dto.SignUpRequestDto;
 import com.example.springbootjwt.domain.user.service.AccountService;
+import com.example.springbootjwt.global.common.dto.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,10 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody SignUpRequestDto signUpUser) {
+    public ResponseEntity<BasicResponse> signUp(@RequestBody SignUpRequestDto signUpUser) {
         accountService.signUp(signUpUser.getEmail(), signUpUser.getEmail(), signUpUser.getPassword());
-        return new ResponseEntity<>("회원가입 성공", HttpStatus.CREATED);
+        BasicResponse response = new BasicResponse("회원가입 성공", HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
