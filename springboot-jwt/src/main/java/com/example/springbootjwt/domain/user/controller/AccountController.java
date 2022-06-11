@@ -26,7 +26,7 @@ public class AccountController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginDto) {
-        String token = accountService.login(loginDto.getEmail(), loginDto.getPassword());
-        return new ResponseEntity<>(new LoginResponseDto(token), HttpStatus.OK);
+        LoginResponseDto responseDto = accountService.login(loginDto.getEmail(), loginDto.getPassword());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

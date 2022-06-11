@@ -1,8 +1,10 @@
 package com.example.springbootjwt.global.config.jwt;
 
 import com.example.springbootjwt.domain.user.service.CustomAccountDetailsService;
+import com.example.springbootjwt.global.common.redis.RedisService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -17,8 +20,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
     private final CustomAccountDetailsService customAccountDetailsService;
-    private String secretKey = "jwt";
-    private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
+    private final RedisService redisService;
+    @Value("${spring.jwt.secret-key}")
+    private String secretKey;
 
     // 의존성 주입 후, 초기화를 수행
     // 객체 초기화, secretKey Base64로 인코딩한다.
@@ -27,14 +31,27 @@ public class JwtProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userId, String roles){
+    public String createAccessToken(String userId, String roles) {
+        Long tokenInvalidTime = 1000L * 60 * 3; // 3m
+        return this.createToken(userId, roles, tokenInvalidTime);
+    }
+
+    public String createRefreshToken(String userId, String roles) {
+        Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
+        String refreshToken = this.createToken(userId, roles, tokenInvalidTime);
+        // TODO: Change 3 -> Duration.ofMillis(tokenInvalidTime)
+        redisService.setValues(userId, refreshToken, Duration.ofMinutes(3));
+        return refreshToken;
+    }
+
+    private String createToken(String userId, String roles, Long tokenInvalidTime){
         Claims claims = Jwts.claims().setSubject(userId); // claims 생성 및 payload 설정
         claims.put("roles", roles); // 권한 설정, key/ value 쌍으로 저장
         Date date = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 발행 유저 정보 저장
                 .setIssuedAt(date) // 발행 시간 저장
-                .setExpiration(new Date(date.getTime() + TOKEN_VALID_TIME)) // 토큰 유효 시간 저장
+                .setExpiration(new Date(date.getTime() + tokenInvalidTime)) // 토큰 유효 시간 저장
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 해싱 알고리즘 및 키 설정
                 .compact(); // 생성
     }

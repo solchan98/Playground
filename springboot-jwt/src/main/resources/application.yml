@@ -12,6 +12,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  redis:
+    port: 63790
+    host: localhost
+  jwt:
+    secret-key: SECRET_KEY
 
 server:
   port: 8080
