@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomAccountDetailService implements UserDetailsService {
+public class CustomAccountDetailsService implements UserDetailsService {
     private final AccountRepository accountRepository;
 
     @Override

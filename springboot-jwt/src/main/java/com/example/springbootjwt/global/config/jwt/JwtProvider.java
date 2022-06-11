@@ -1,6 +1,6 @@
 package com.example.springbootjwt.global.config.jwt;
 
-import com.example.springbootjwt.domain.user.service.CustomAccountDetailService;
+import com.example.springbootjwt.domain.user.service.CustomAccountDetailsService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
-    private final CustomAccountDetailService customAccountDetailService;
+    private final CustomAccountDetailsService customAccountDetailsService;
     private String secretKey = "jwt";
     private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
 
@@ -55,7 +55,7 @@ public class JwtProvider {
     }
 
     private Authentication getAuthentication(String token) {
-        UserDetails userDetails = customAccountDetailService.loadUserByUsername(getUserEmail(token));
+        UserDetails userDetails = customAccountDetailsService.loadUserByUsername(getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
