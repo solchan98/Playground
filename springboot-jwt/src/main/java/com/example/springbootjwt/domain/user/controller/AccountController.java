@@ -1,5 +1,7 @@
 package com.example.springbootjwt.domain.user.controller;
 
+import com.example.springbootjwt.domain.user.domain.Account;
+import com.example.springbootjwt.domain.user.domain.AuthUser;
 import com.example.springbootjwt.domain.user.domain.dto.LoginRequestDto;
 import com.example.springbootjwt.domain.user.domain.dto.LoginResponseDto;
 import com.example.springbootjwt.domain.user.domain.dto.SignUpRequestDto;
@@ -10,11 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class AccountController {
     private final AccountService accountService;
+
+    @GetMapping("/logout")
+    public ResponseEntity<BasicResponse> logout(@AuthUser Account account, HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization").substring(7);
+        accountService.logout(account.getEmail(), accessToken);
+        BasicResponse response = new BasicResponse("로그아웃 완료", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 
     @GetMapping("/re-issue")
     public ResponseEntity<LoginResponseDto> reIssue(@RequestParam("email") String email, @RequestParam("refreshToken") String refreshToken) {

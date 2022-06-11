@@ -32,6 +32,13 @@ public class JwtProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
+    public void logout(String userId, String accessToken) {
+        String prefix = "BlackList_AccessToken_";
+        long expiredAccessTokenTime = getExpiredTime(accessToken).getTime() - new Date().getTime();
+        redisService.setValues(prefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
+        redisService.deleteValues(userId); // Delete RefreshToken In Redis
+    }
+
     public void checkRefreshToken(String userId, String refreshToken) {
         String redisRT = redisService.getValues(userId);
         if (!refreshToken.equals(redisRT)) {
@@ -66,12 +73,18 @@ public class JwtProvider {
 
     public Authentication validateToken(HttpServletRequest request, String token) {
         String exception = "exception";
+        String prefix = "BlackList_AccessToken_";
         try {
+            String expiredAT = redisService.getValues(prefix + token);
+            if (expiredAT != null) {
+                // TODO: 아래 catch에 걸리며 "토큰 만료" 에러메시지 무의미, 리팩토링 예정
+                throw new BadRequestException("토큰 만료");
+            }
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return getAuthentication(token);
         } catch (MalformedJwtException  | SignatureException | UnsupportedJwtException e) {
             request.setAttribute(exception, "토큰의 형식을 확인하세요");
-        } catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException | BadRequestException e) {
             request.setAttribute(exception, "토큰이 만료되었습니다.");
         } catch (IllegalArgumentException e) {
             request.setAttribute(exception, "JWT compact of handler are invalid");
@@ -84,7 +97,11 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String getUserEmail(String token) {
+    private String getUserEmail(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    private Date getExpiredTime(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
     }
 }
