@@ -29,7 +29,6 @@ public class AccountService {
         return new LoginResponseDto(accessToken, refreshToken);
     }
 
-    @Transactional
     public LoginResponseDto login(String email, String password) {
         Account account = accountRepository
                 .findByEmail(email).orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));

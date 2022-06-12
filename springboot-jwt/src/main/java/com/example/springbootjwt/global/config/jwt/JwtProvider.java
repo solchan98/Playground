@@ -56,8 +56,7 @@ public class JwtProvider {
     public String createRefreshToken(String userId, String roles) {
         Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
         String refreshToken = this.createToken(userId, roles, tokenInvalidTime);
-        // TODO: Change 3 -> Duration.ofMillis(tokenInvalidTime)
-        redisService.setValues(userId, refreshToken, Duration.ofMinutes(3));
+        redisService.setValues(userId, refreshToken, Duration.ofMillis(tokenInvalidTime));
         return refreshToken;
     }
 
@@ -77,15 +76,14 @@ public class JwtProvider {
         String exception = "exception";
         try {
             String expiredAT = redisService.getValues(blackListATPrefix + token);
-            if (expiredAT != null) {
-                // TODO: 아래 catch에 걸리며 "토큰 만료" 에러메시지 무의미, 리팩토링 예정
-                throw new BadRequestException("토큰 만료");
+           if (expiredAT != null) {
+                throw new ExpiredJwtException(null, null, null);
             }
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return getAuthentication(token);
         } catch (MalformedJwtException  | SignatureException | UnsupportedJwtException e) {
             request.setAttribute(exception, "토큰의 형식을 확인하세요");
-        } catch (ExpiredJwtException | BadRequestException e) {
+        } catch (ExpiredJwtException e) {
             request.setAttribute(exception, "토큰이 만료되었습니다.");
         } catch (IllegalArgumentException e) {
             request.setAttribute(exception, "JWT compact of handler are invalid");
