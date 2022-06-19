@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BasicResponse> handle(BadRequestException e) {
