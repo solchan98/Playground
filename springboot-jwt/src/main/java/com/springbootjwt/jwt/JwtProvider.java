@@ -52,9 +52,4 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
-
-//    public Subject getSubject(String atk) throws JwtException, JsonProcessingException {
-//        String subjectStr = Jwts.parser().setSigningKey(key).parseClaimsJws(atk).getBody().getSubject();
-//        return objectMapper.readValue(subjectStr, Subject.class);
-//    }
 }
