@@ -5,6 +5,11 @@ spring:
     username: root
     password: 1234
 
+  jwt:
+    key: key
+    live:
+      atk: 300000
+
   jpa:
     database: mysql
     hibernate:

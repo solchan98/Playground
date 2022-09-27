@@ -28,4 +28,18 @@ public class AccountService {
         account = accountRepository.save(account);
         return AccountResponse.of(account);
     }
+
+    @Transactional(readOnly = true)
+    public AccountResponse login(LoginRequest loginRequest) {
+        Account account = accountRepository
+                .findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
+
+        boolean matches = passwordEncoder.matches(
+                loginRequest.getPassword(),
+                account.getPassword());
+        if (!matches) throw new BadRequestException("아이디 혹은 비밀번호를 확인하세요.");
+
+        return AccountResponse.of(account);
+    }
 }
