@@ -1,9 +1,11 @@
 package com.springbootjwt.account;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.springbootjwt.jwt.AccountDetails;
 import com.springbootjwt.jwt.JwtProvider;
 import com.springbootjwt.jwt.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,5 +34,13 @@ public class AccountController {
     @GetMapping("/test")
     public String test() {
         return "good!";
+    }
+
+    @PostMapping("/reissue")
+    public TokenResponse reissue(
+            @AuthenticationPrincipal AccountDetails accountDetails
+    ) throws JsonProcessingException {
+        AccountResponse accountResponse = AccountResponse.of(accountDetails.getAccount());
+        return jwtProvider.reissueAtk(accountResponse);
     }
 }
