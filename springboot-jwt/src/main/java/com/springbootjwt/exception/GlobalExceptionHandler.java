@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
         Message message = new Message(e.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Message> handle(ForbiddenException e) {
+        Message message = new Message(e.getMessage(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
+    }
 }
