@@ -28,4 +28,9 @@ public class AccountController {
         AccountResponse accountResponse = accountService.login(loginRequest);
         return jwtProvider.createTokensByLogin(accountResponse);
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "good!";
+    }
 }
