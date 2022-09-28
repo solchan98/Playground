@@ -36,7 +36,7 @@ public class AccountController {
         return "good!";
     }
 
-    @PostMapping("/reissue")
+    @GetMapping("/reissue")
     public TokenResponse reissue(
             @AuthenticationPrincipal AccountDetails accountDetails
     ) throws JsonProcessingException {
