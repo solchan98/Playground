@@ -1,7 +1,5 @@
-package Atapter;
+package Adapter;
 
-import Adapter.Banner;
-import Adapter.Printable;
 import Adapter.inheritance.PrintBanner;
 import org.junit.jupiter.api.Test;
 
