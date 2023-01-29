@@ -1,6 +1,6 @@
 package com.example.mockito.part3.domain;
 
-import com.example.mockito.part3.IdCardValidSDK;
+import com.example.mockito.part3.sdk.IdCardValidSDK;
 
 public class IdChecker {
     private final int minAge = 20;
