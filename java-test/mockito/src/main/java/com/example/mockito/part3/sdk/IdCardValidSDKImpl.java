@@ -10,7 +10,7 @@ public class IdCardValidSDKImpl implements IdCardValidSDK {
     }
 
     @Override
-    public boolean valid(IdCard idCard) {
+    public boolean verify(IdCard idCard) {
         // NOTE: 어떠한 외부 API 통신을 한다.
         // NOTE : api를 1회 호출할 때 마다 0.01원이 부과된다.
 //         connection.valid(idCard);

@@ -16,6 +16,6 @@ public class IdChecker {
             return false;
         }
 
-        return sdk.valid(idCard);
+        return sdk.verify(idCard);
     }
 }

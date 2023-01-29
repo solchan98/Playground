@@ -19,7 +19,7 @@ public class IdCheckerTest {
         // given
         IdCard idCard = new IdCard("sol", 19);
         IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
-        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.TRUE);
+        given(idCardValidSDK.verify(idCard)).willReturn(Boolean.TRUE);
         IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
@@ -35,7 +35,7 @@ public class IdCheckerTest {
         // given
         IdCard idCard = new IdCard("sol", 20);
         IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
-        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.TRUE);
+        given(idCardValidSDK.verify(idCard)).willReturn(Boolean.TRUE);
         IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
@@ -51,7 +51,7 @@ public class IdCheckerTest {
         // given
         IdCard idCard = new IdCard("sol", 35);
         IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
-        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.FALSE);
+        given(idCardValidSDK.verify(idCard)).willReturn(Boolean.FALSE);
         IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
