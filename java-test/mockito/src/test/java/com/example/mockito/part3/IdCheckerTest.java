@@ -2,7 +2,7 @@ package com.example.mockito.part3;
 
 import com.example.mockito.part3.domain.IdCard;
 import com.example.mockito.part3.domain.IdChecker;
-import com.example.mockito.part3.sdk.IdCardSDKManager;
+import com.example.mockito.part3.sdk.IdCardValidSDK;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,38 @@ public class IdCheckerTest {
     void whenAgeIs19() {
         // given
         IdCard idCard = new IdCard("sol", 19);
-        IdChecker idChecker = new IdChecker(IdCardSDKManager.createSDK());
+        IdCardValidSDK idCardValidSDK = new IdCardValidSDK() {
+            @Override
+            public boolean valid(IdCard idCard) {
+                return true;
+            }
+
+            @Override
+            public void aMethod() {
+
+            }
+
+            @Override
+            public void bMethod() {
+
+            }
+
+            @Override
+            public void cMethod() {
+
+            }
+
+            @Override
+            public void dMethod() {
+
+            }
+
+            @Override
+            public void eMethod() {
+
+            }
+        };
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
         boolean valid = idChecker.check(idCard);
@@ -30,7 +61,38 @@ public class IdCheckerTest {
     void whenAgeIs20() {
         // given
         IdCard idCard = new IdCard("sol", 20);
-        IdChecker idChecker = new IdChecker(IdCardSDKManager.createSDK());
+        IdCardValidSDK idCardValidSDK = new IdCardValidSDK() {
+            @Override
+            public boolean valid(IdCard idCard) {
+                return true;
+            }
+
+            @Override
+            public void aMethod() {
+
+            }
+
+            @Override
+            public void bMethod() {
+
+            }
+
+            @Override
+            public void cMethod() {
+
+            }
+
+            @Override
+            public void dMethod() {
+
+            }
+
+            @Override
+            public void eMethod() {
+
+            }
+        };
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
         boolean valid = idChecker.check(idCard);
@@ -44,7 +106,38 @@ public class IdCheckerTest {
     void whenInvalidIdCard() {
         // given
         IdCard idCard = new IdCard("sol", 35);
-        IdChecker idChecker = new IdChecker(IdCardSDKManager.createSDK());
+        IdCardValidSDK idCardValidSDK = new IdCardValidSDK() {
+            @Override
+            public boolean valid(IdCard idCard) {
+                return false;
+            }
+
+            @Override
+            public void aMethod() {
+
+            }
+
+            @Override
+            public void bMethod() {
+
+            }
+
+            @Override
+            public void cMethod() {
+
+            }
+
+            @Override
+            public void dMethod() {
+
+            }
+
+            @Override
+            public void eMethod() {
+
+            }
+        };
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
         boolean valid = idChecker.check(idCard);
