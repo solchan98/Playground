@@ -14,7 +14,7 @@ public class IdCheckerTest {
     @DisplayName("check - 담배를 구매할 수 없는 나이(19살)인 경우")
     void whenAgeIs19() {
         // given
-        IdChecker idChecker = new IdChecker();
+        IdChecker idChecker = new IdChecker(new IdCardValidSDK(new Object()));
         IdCard idCard = new IdCard("sol", 19);
 
         // when
@@ -28,7 +28,7 @@ public class IdCheckerTest {
     @DisplayName("check - 담배를 구매할 수 있는 나이(20살)인 경우")
     void whenAgeIs20() {
         // given
-        IdChecker idChecker = new IdChecker();
+        IdChecker idChecker = new IdChecker(new IdCardValidSDK(new Object()));
         IdCard idCard = new IdCard("sol", 20);
 
         // when
