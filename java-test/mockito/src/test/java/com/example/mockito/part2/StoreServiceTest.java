@@ -1,7 +1,8 @@
-package com.example.mockito.service.part2;
+package com.example.mockito.part2;
 
-import com.example.mockito.domain.part2.Customer;
-import org.junit.jupiter.api.Disabled;
+import com.example.mockito.part2.domain.Customer;
+import com.example.mockito.part2.service.CustomerService;
+import com.example.mockito.part2.service.StoreService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

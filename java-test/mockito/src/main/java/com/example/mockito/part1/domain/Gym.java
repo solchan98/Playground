@@ -1,4 +1,4 @@
-package com.example.mockito.domain.part1;
+package com.example.mockito.part1.domain;
 
 import java.util.ArrayList;
 import java.util.List;

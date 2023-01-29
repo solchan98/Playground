@@ -1,8 +1,8 @@
-package com.example.mockito.service.part1;
+package com.example.mockito.part1.service;
 
-import com.example.mockito.domain.part1.Account;
-import com.example.mockito.domain.part1.Gym;
-import com.example.mockito.domain.part1.GymRepository;
+import com.example.mockito.part1.domain.Account;
+import com.example.mockito.part1.domain.Gym;
+import com.example.mockito.part1.domain.GymRepository;
 
 public class GymService {
     private final AccountService accountService;

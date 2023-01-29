@@ -1,10 +1,10 @@
-package com.example.mockito.service.part1;
+package com.example.mockito.part1;
 
-import com.example.mockito.domain.part1.Account;
-import com.example.mockito.domain.part1.Gym;
-import com.example.mockito.domain.part1.GymRepository;
-import com.example.mockito.service.part1.AccountService;
-import com.example.mockito.service.part1.GymService;
+import com.example.mockito.part1.domain.Account;
+import com.example.mockito.part1.domain.Gym;
+import com.example.mockito.part1.domain.GymRepository;
+import com.example.mockito.part1.service.AccountService;
+import com.example.mockito.part1.service.GymService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

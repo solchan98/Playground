@@ -1,6 +1,6 @@
-package com.example.mockito.service.part2;
+package com.example.mockito.part2.service;
 
-import com.example.mockito.domain.part2.Customer;
+import com.example.mockito.part2.domain.Customer;
 
 public class StoreService {
 
