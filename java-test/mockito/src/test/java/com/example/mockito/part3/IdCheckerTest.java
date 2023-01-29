@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @DisplayName("IdChecker Test")
 public class IdCheckerTest {
@@ -14,8 +16,10 @@ public class IdCheckerTest {
     @DisplayName("check - 담배를 구매할 수 없는 나이(19살)인 경우")
     void whenAgeIs19() {
         // given
-        IdChecker idChecker = new IdChecker(new IdCardValidSDK(new Object()));
+        IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
         IdCard idCard = new IdCard("sol", 19);
+        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.TRUE);
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
         boolean valid = idChecker.check(idCard);
@@ -28,13 +32,32 @@ public class IdCheckerTest {
     @DisplayName("check - 담배를 구매할 수 있는 나이(20살)인 경우")
     void whenAgeIs20() {
         // given
-        IdChecker idChecker = new IdChecker(new IdCardValidSDK(new Object()));
+        IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
         IdCard idCard = new IdCard("sol", 20);
+        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.TRUE);
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
 
         // when
         boolean valid = idChecker.check(idCard);
 
         // then
         assertThat(valid).isTrue();
+    }
+
+    @Test
+    @DisplayName("check - IdCard가 유효하지 않은 경우")
+    void whenInvalidIdCard() {
+        // given
+        IdCardValidSDK idCardValidSDK = mock(IdCardValidSDK.class);
+        IdCard idCard = new IdCard("sol", 35);
+        given(idCardValidSDK.valid(idCard)).willReturn(Boolean.FALSE);
+        IdChecker idChecker = new IdChecker(idCardValidSDK);
+
+        // when
+        boolean valid = idChecker.check(idCard);
+
+        // then
+        assertThat(valid).isFalse();
+
     }
 }
