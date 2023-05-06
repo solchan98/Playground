@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.BoardMapper">
-    <select id="selectBoard" parameterType="java.lang.String" resultType="org.example.Board">
-        select * from Board where author = #{author}
+    <select id="selectBoard" parameterType="java.lang.String" resultType="Board">
+        select * from board where author = #{author}
     </select>
 </mapper>
