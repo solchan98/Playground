@@ -2,8 +2,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.example.BoardMapper">
+<mapper namespace="org.example.repository.BoardMapper">
+    <insert id="create">
+        insert into board values
+        (#{id}, #{title}, #{content}, #{author}, #{createdAt}, #{updatedAt})
+    </insert>
     <select id="selectBoard" parameterType="String" resultType="Board">
-        select * from board where author = #{author}
+        select * from board where id = #{id}
     </select>
 </mapper>
