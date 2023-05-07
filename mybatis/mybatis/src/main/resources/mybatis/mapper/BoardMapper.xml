@@ -7,6 +7,15 @@
         insert into board values
         (#{id}, #{title}, #{content}, #{author}, #{createdAt}, #{updatedAt})
     </insert>
+    <update id="updateBoard">
+        update board
+        set
+            title = #{title},
+            content = #{content},
+            updated_at = #{updatedAt}
+        where
+            id = #{id};
+    </update>
     <select id="selectBoard" parameterType="String" resultType="Board">
         select * from board where id = #{id}
     </select>

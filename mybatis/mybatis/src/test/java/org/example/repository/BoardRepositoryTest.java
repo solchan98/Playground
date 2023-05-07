@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class BoardRepositoryTest {
     private final BoardRepository boardRepository = new BoardRepositoryImpl(
@@ -38,4 +39,20 @@ public class BoardRepositoryTest {
         assertThat(optionalBoard).isEmpty();
     }
 
+    @Test
+    void BOARD의_TITLE_및_CONTENT는_수정할_수_있다() {
+        // given
+        Board board = Board.newBoard("새로운 제목", "새로운 내용", "sol");
+        boardRepository.create(board);
+        UpdateBoard updateBoard = UpdateBoard.of(board.getId(), "업데이트 제목", "업데이트 내용");
+
+        // when
+        Board updatedBoard = boardRepository.update(updateBoard);
+
+        // then
+        assertAll(
+                () -> assertThat(updatedBoard.getTitle()).isEqualTo(updateBoard.getTitle()),
+                () -> assertThat(updatedBoard.getContent()).isEqualTo(updateBoard.getContent())
+        );
+    }
 }

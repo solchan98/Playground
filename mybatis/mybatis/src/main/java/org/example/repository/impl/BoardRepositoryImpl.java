@@ -5,6 +5,7 @@ import org.example.Board;
 import org.example.repository.BoardMapper;
 import org.example.repository.BoardRepository;
 import org.example.config.mybatis.MyBatisSessionManager;
+import org.example.repository.UpdateBoard;
 
 import java.util.Optional;
 
@@ -37,8 +38,16 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public Board update(Board board) {
-        return null;
+    public Board update(UpdateBoard updateBoard) {
+        SqlSession session = sessionManager.getSession();
+        findById(updateBoard.getId())
+                .orElseThrow(() -> new RuntimeException("해당 Board가 존재하지 않습니다."));
+
+        getMapper(session).updateBoard(updateBoard);
+        sessionManager.closeSession(session);
+
+        return findById(updateBoard.getId())
+                .orElseThrow(() -> new RuntimeException("에러가 발생하였습니다."));
     }
 
     @Override
