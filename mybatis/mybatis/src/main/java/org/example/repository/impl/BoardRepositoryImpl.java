@@ -7,6 +7,7 @@ import org.example.repository.BoardRepository;
 import org.example.config.mybatis.MyBatisSessionManager;
 import org.example.repository.UpdateBoard;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BoardRepositoryImpl implements BoardRepository {
@@ -58,6 +59,12 @@ public class BoardRepositoryImpl implements BoardRepository {
 
         sessionManager.closeSession(session);
         return Optional.ofNullable(board);
+    }
+
+    @Override
+    public List<Board> findAll() {
+        SqlSession session = sessionManager.getSession();
+        return getMapper(session).selectAll();
     }
 
 

@@ -22,6 +22,9 @@
     <delete id="deleteAll">
         delete from board where id != -1;
     </delete>
+    <select id="selectAll" resultType="Board">
+        select * from board
+    </select>
     <select id="selectBoard" parameterType="String" resultType="Board">
         select * from board where id = #{id}
     </select>
