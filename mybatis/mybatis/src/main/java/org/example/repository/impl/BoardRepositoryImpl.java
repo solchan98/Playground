@@ -60,8 +60,17 @@ public class BoardRepositoryImpl implements BoardRepository {
         return Optional.ofNullable(board);
     }
 
-    @Override
-    public void deleteById() {
 
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public void deleteById(String id) {
+        SqlSession session = sessionManager.getSession();
+        getMapper(session).deleteById(id);
+
+        sessionManager.closeSession(session);
     }
 }

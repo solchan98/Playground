@@ -8,5 +8,6 @@ public interface BoardRepository {
     Board create(Board board);
     Board update(UpdateBoard updateBoard);
     Optional<Board> findById(String id);
-    void deleteById();
+    void deleteById(String id);
+    void deleteAll();
 }

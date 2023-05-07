@@ -16,6 +16,12 @@
         where
             id = #{id};
     </update>
+    <delete id="deleteById" parameterType="String">
+        delete from board where id = #{id}
+    </delete>
+    <delete id="deleteAll">
+        delete from board where id != -1;
+    </delete>
     <select id="selectBoard" parameterType="String" resultType="Board">
         select * from board where id = #{id}
     </select>

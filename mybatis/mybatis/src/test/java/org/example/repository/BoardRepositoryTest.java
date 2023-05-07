@@ -55,4 +55,20 @@ public class BoardRepositoryTest {
                 () -> assertThat(updatedBoard.getContent()).isEqualTo(updateBoard.getContent())
         );
     }
+
+    @Test
+    void UUID를_통해_BOARD를_삭제할_수_있다() {
+        // given
+        Board board = Board.newBoard("새로운 제목", "새로운 내용", "sol");
+        boardRepository.create(board);
+
+        // when
+        boardRepository.deleteById(board.getId());
+        Optional<Board> boardOptional = boardRepository.findById(board.getId());
+
+        // then
+        assertThat(boardOptional).isEmpty();
+
+
+    }
 }
