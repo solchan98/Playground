@@ -6,6 +6,8 @@ import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -33,4 +35,21 @@ class BoardRepositoryTest {
                 () -> assertThat(boardInDB.getAuthor()).isEqualTo(board.getAuthor())
         );
     }
+
+    @Test
+    void 모든_BOARD를_조회할_수_있다() {
+        // given
+        int total = 10;
+        for (int idx = 0; idx < total; idx++) {
+            Board board = Board.newBoard(idx + "번째 글", "내용", "sol");
+            boardRepository.create(board);
+        }
+
+        // when
+        List<Board> boards = boardRepository.findAll();
+
+        // then
+        assertThat(boards).hasSize(total);
+    }
+
 }
