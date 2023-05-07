@@ -83,4 +83,18 @@ public class BoardRepositoryTest {
         // then
         assertThat(boards.size()).isGreaterThanOrEqualTo(1);
     }
+
+    @Test
+    void BOARD의_전체_데이터를_삭제할_수_있다() {
+        // given
+        Board board = Board.newBoard("새로운 제목", "새로운 내용", "sol");
+        boardRepository.create(board);
+
+        // when
+        boardRepository.deleteAll();
+        List<Board> boards = boardRepository.findAll();
+
+        // then
+        assertThat(boards.size()).isEqualTo(0);
+    }
 }

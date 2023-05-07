@@ -70,7 +70,8 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public void deleteAll() {
-
+        SqlSession session = sessionManager.getSession();
+        getMapper(session).deleteAll();
     }
 
     @Override

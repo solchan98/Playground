@@ -20,7 +20,7 @@
         delete from board where id = #{id}
     </delete>
     <delete id="deleteAll">
-        delete from board where id != -1;
+        delete from board where id != '-1';
     </delete>
     <select id="selectAll" resultType="Board">
         select * from board
