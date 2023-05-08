@@ -1,7 +1,6 @@
 package com.example.mybatisspringbootstarter.repository;
 
 import com.example.mybatisspringbootstarter.Board;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,8 +73,16 @@ class BoardRepositoryTest {
     }
 
     @Test
-    @Disabled
     void BOARD의_ID를_통해_BOARD를_삭제할_수_있다() {
+        // given
+        Board board = Board.newBoard("새로운 제목", "새로운 내용", "sol");
+        boardRepository.create(board);
 
+        // when
+        boardRepository.deleteById(board.getId());
+        Board nullBoard = boardRepository.findById(board.getId());
+
+        // then
+        assertThat(nullBoard).isNull();
     }
 }

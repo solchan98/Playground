@@ -28,4 +28,7 @@ public interface BoardRepository {
             "set title = #{updateBoard.title}, content = #{updateBoard.content}, updated_at = #{updateBoard.updatedAt} " +
             "where id = #{updateBoard.id}")
     void update(@Param("updateBoard") UpdateBoard updateBoard);
+
+    @Delete("delete from board where id = #{id}")
+    void deleteById(@Param("id") String id);
 }
