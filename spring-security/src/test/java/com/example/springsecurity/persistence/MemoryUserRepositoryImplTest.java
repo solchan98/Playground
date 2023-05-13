@@ -34,7 +34,8 @@ public class MemoryUserRepositoryImplTest {
         String username = "c5652f12-7640-4c95-8cc6-e4118fc348cb";
         String userId = "sol";
         String password = "psolsolw";
-        User user = new User(username, userId, password, Boolean.FALSE);
+        List<String> roles = List.of("user", "admin");
+        User user = new User(username, userId, password, Boolean.FALSE, roles);
         userRepository.create(user);
 
         // when
@@ -54,8 +55,8 @@ public class MemoryUserRepositoryImplTest {
     void findAll_호출_시_모든_user를_collection으로_반환한다() {
         // given
         Collection<User> users = List.of(
-                new User("123", "sol", "psolsolw", Boolean.FALSE),
-                new User("321", "chan", "pchanw", Boolean.FALSE)
+                new User("123", "sol", "psolsolw", Boolean.FALSE, List.of("user", "admin")),
+                new User("321", "chan", "pchanw", Boolean.FALSE, List.of("user"))
         );
         users.forEach(userRepository::create);
 
