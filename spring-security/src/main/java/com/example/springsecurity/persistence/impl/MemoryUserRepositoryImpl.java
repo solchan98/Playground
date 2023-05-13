@@ -11,6 +11,11 @@ import static com.example.springsecurity.database.MemoryUserDatabase.userDB;
 public class MemoryUserRepositoryImpl implements UserRepository {
 
     @Override
+    public void create(User user) {
+        userDB.put(user.getUsername(), user);
+    }
+
+    @Override
     public Optional<User> findByUsername(String username) {
         boolean contains = userDB.containsKey(username);
 
