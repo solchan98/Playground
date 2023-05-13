@@ -4,9 +4,9 @@ public class User {
     private final String username; // not user id, key of identifiable
     private final String userId;
     private final String password;
-    private final String enabled;
+    private final Boolean enabled;
 
-    public User(String username, String userId, String password, String enabled) {
+    public User(String username, String userId, String password, Boolean enabled) {
         this.username = username;
         this.userId = userId;
         this.password = password;
@@ -25,7 +25,7 @@ public class User {
         return password;
     }
 
-    public String getEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 }
