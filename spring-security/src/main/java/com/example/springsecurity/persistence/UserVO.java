@@ -13,7 +13,7 @@ public class UserVO implements UserDetails {
     private final String userId;
     private final String password;
     private final List<SimpleGrantedAuthority> roles;
-    private final Boolean locked;
+    private final Boolean nonLocked;
     private final Boolean enabled;
 
     public UserVO(String username, String userId, String password, List<String> roles, LocalDateTime blockedAt, Boolean enabled) {
@@ -21,7 +21,7 @@ public class UserVO implements UserDetails {
         this.userId = userId;
         this.password = password;
         this.roles = roles.stream().map(SimpleGrantedAuthority::new).toList();
-        this.locked = LocalDateTime.now().minusMinutes(5).isAfter(blockedAt);
+        this.nonLocked = LocalDateTime.now().minusMinutes(5).isAfter(blockedAt);
         this.enabled = enabled;
     }
 
@@ -51,7 +51,7 @@ public class UserVO implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return nonLocked;
     }
 
     @Override
