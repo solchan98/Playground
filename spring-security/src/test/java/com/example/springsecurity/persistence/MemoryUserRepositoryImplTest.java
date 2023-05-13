@@ -22,7 +22,7 @@ public class MemoryUserRepositoryImplTest {
         String invalidUsername = "73d4b68d-11e6-4631-95d0-6104d598e045";
         
         // when
-        Optional<User> optionalUser = userRepository.findByUsername(invalidUsername);
+        Optional<UserVO> optionalUser = userRepository.findByUsername(invalidUsername);
 
         // then
         assertThat(optionalUser).isEmpty();
@@ -35,35 +35,35 @@ public class MemoryUserRepositoryImplTest {
         String userId = "sol";
         String password = "psolsolw";
         List<String> roles = List.of("user", "admin");
-        User user = new User(username, userId, password, Boolean.FALSE, roles);
-        userRepository.create(user);
+        UserVO userVO = new UserVO(username, userId, password, roles, Boolean.FALSE);
+        userRepository.create(userVO);
 
         // when
-        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
+        Optional<UserVO> optionalUserVO = userRepository.findByUsername(userVO.getUsername());
 
         // then
-        assertThat(optionalUser).isPresent();
-        User userInDB = optionalUser.get();
+        assertThat(optionalUserVO).isPresent();
+        UserVO userVOInDB = optionalUserVO.get();
         assertAll(
-                () -> assertThat(userInDB.getUsername()).isEqualTo(user.getUsername()),
-                () -> assertThat(userInDB.getPassword()).isEqualTo(user.getPassword()),
-                () -> assertThat(userInDB.getEnabled()).isEqualTo(user.getEnabled())
+                () -> assertThat(userVOInDB.getUsername()).isEqualTo(userVO.getUsername()),
+                () -> assertThat(userVOInDB.getPassword()).isEqualTo(userVO.getPassword()),
+                () -> assertThat(userVOInDB.isEnabled()).isEqualTo(userVO.isEnabled())
         );
     }
 
     @Test
     void findAll_호출_시_모든_user를_collection으로_반환한다() {
         // given
-        Collection<User> users = List.of(
-                new User("123", "sol", "psolsolw", Boolean.FALSE, List.of("user", "admin")),
-                new User("321", "chan", "pchanw", Boolean.FALSE, List.of("user"))
+        Collection<UserVO> userVOs = List.of(
+                new UserVO("123", "sol", "psolsolw", List.of("user", "admin"), Boolean.FALSE),
+                new UserVO("321", "chan", "pchanw", List.of("user"), Boolean.FALSE)
         );
-        users.forEach(userRepository::create);
+        userVOs.forEach(userRepository::create);
 
         // when
-        Collection<User> usersInDB = userRepository.findAll();
+        Collection<UserVO> userVOsInDB = userRepository.findAll();
 
         // then
-        assertThat(usersInDB.size()).isEqualTo(2);
+        assertThat(userVOsInDB.size()).isEqualTo(2);
     }
 }
