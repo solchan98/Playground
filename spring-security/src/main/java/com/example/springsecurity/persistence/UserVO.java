@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,13 +13,15 @@ public class UserVO implements UserDetails {
     private final String userId;
     private final String password;
     private final List<SimpleGrantedAuthority> roles;
+    private final Boolean locked;
     private final Boolean enabled;
 
-    public UserVO(String username, String userId, String password, List<String> roles, Boolean enabled) {
+    public UserVO(String username, String userId, String password, List<String> roles, LocalDateTime blockedAt, Boolean enabled) {
         this.username = username;
         this.userId = userId;
         this.password = password;
         this.roles = roles.stream().map(SimpleGrantedAuthority::new).toList();
+        this.locked = LocalDateTime.now().minusMinutes(5).isAfter(blockedAt);
         this.enabled = enabled;
     }
 
@@ -43,17 +46,17 @@ public class UserVO implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true; // account is always active
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !locked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true; // account is always state of credential
     }
 
     @Override

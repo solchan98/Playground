@@ -1,10 +1,10 @@
 package com.example.springsecurity.persistence;
 
-import com.example.springsecurity.database.User;
 import com.example.springsecurity.persistence.impl.MemoryUserRepositoryImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class MemoryUserRepositoryImplTest {
         String userId = "sol";
         String password = "psolsolw";
         List<String> roles = List.of("user", "admin");
-        UserVO userVO = new UserVO(username, userId, password, roles, Boolean.FALSE);
+        UserVO userVO = new UserVO(username, userId, password, roles, LocalDateTime.MIN, Boolean.FALSE);
         userRepository.create(userVO);
 
         // when
@@ -55,8 +55,8 @@ public class MemoryUserRepositoryImplTest {
     void findAll_호출_시_모든_user를_collection으로_반환한다() {
         // given
         Collection<UserVO> userVOs = List.of(
-                new UserVO("123", "sol", "psolsolw", List.of("user", "admin"), Boolean.FALSE),
-                new UserVO("321", "chan", "pchanw", List.of("user"), Boolean.FALSE)
+                new UserVO("123", "sol", "psolsolw", List.of("user", "admin"), LocalDateTime.MIN, Boolean.FALSE),
+                new UserVO("321", "chan", "pchanw", List.of("user"), LocalDateTime.MIN, Boolean.FALSE)
         );
         userVOs.forEach(userRepository::create);
 

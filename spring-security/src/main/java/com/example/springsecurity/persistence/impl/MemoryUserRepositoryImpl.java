@@ -5,6 +5,7 @@ import com.example.springsecurity.persistence.UserRepository;
 import com.example.springsecurity.persistence.UserVO;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class MemoryUserRepositoryImpl implements UserRepository {
                 userVO.getUserId(),
                 userVO.getPassword(),
                 userVO.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList(),
+                LocalDateTime.MIN, // set '-999999999-01-01T00:00:00'
                 userVO.isEnabled()
         );
     }
@@ -49,6 +51,7 @@ public class MemoryUserRepositoryImpl implements UserRepository {
                 user.getUserId(),
                 user.getPassword(),
                 user.getRoles(),
+                user.getBlockedAt(),
                 user.getEnabled()
         );
     }
