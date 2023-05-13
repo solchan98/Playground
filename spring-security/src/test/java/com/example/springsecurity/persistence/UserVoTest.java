@@ -44,8 +44,6 @@ public class UserVoTest {
                 Boolean.TRUE
         );
 
-        System.out.println(minuteOfLock);
-
         // when
         boolean isNonLocked = userVO.isAccountNonLocked();
 
