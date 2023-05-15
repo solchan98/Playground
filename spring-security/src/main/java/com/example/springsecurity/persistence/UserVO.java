@@ -9,16 +9,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserVO implements UserDetails {
-    private final String username; // not user id, key of identifiable
-    private final String userId;
+    private final String username;
     private final String password;
     private final List<SimpleGrantedAuthority> roles;
     private final Boolean nonLocked;
     private final Boolean enabled;
 
-    public UserVO(String username, String userId, String password, List<String> roles, LocalDateTime blockedAt, Boolean enabled) {
+    public UserVO(String username, String password, List<String> roles, LocalDateTime blockedAt, Boolean enabled) {
         this.username = username;
-        this.userId = userId;
         this.password = password;
         this.roles = roles.stream().map(SimpleGrantedAuthority::new).toList();
         this.nonLocked = LocalDateTime.now().minusMinutes(5).isAfter(blockedAt);
@@ -38,10 +36,6 @@ public class UserVO implements UserDetails {
     @Override
     public String getUsername() {
         return username;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     @Override

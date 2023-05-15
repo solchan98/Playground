@@ -37,7 +37,6 @@ public class MemoryUserRepositoryImpl implements UserRepository {
     private User toUser(UserVO userVO) {
         return new User(
                 userVO.getUsername(),
-                userVO.getUserId(),
                 userVO.getPassword(),
                 userVO.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList(),
                 LocalDateTime.MIN, // set '-999999999-01-01T00:00:00'
@@ -47,7 +46,6 @@ public class MemoryUserRepositoryImpl implements UserRepository {
 
     private UserVO toUserVO(User user) {
         return new UserVO(
-                user.getUsername(),
                 user.getUserId(),
                 user.getPassword(),
                 user.getRoles(),
