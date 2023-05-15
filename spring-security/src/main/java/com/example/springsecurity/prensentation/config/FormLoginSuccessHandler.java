@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import java.io.IOException;
 import java.util.Collection;
 
-public class SessionLoginSuccessHandler implements AuthenticationSuccessHandler {
+public class FormLoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

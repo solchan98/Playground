@@ -24,7 +24,7 @@ public class SecurityConfig {
         httpSecurity
                 .userDetailsService(userDetailsService)
                 .formLogin()
-                .successHandler(new SessionLoginSuccessHandler())
+                .successHandler(new FormLoginSuccessHandler())
                 .permitAll();
 
         configCustomerApi(httpSecurity);
