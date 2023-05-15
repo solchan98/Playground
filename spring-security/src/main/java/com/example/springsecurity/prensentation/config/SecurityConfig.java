@@ -19,17 +19,45 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity httpSecurity,
-            UserDetailsService userDetailsService) throws Exception {
-        return httpSecurity
+            UserDetailsService userDetailsService
+    ) throws Exception {
+        httpSecurity
                 .userDetailsService(userDetailsService)
-                .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
                 .formLogin()
                 .successHandler(new SessionLoginSuccessHandler())
-                .permitAll()
-                .and()
-                .build();
+                .permitAll();
+
+        configCustomerApi(httpSecurity);
+        configSellerApi(httpSecurity);
+        configAdminApi(httpSecurity);
+
+        httpSecurity
+                .authorizeHttpRequests()
+                .anyRequest()
+                .hasAnyAuthority("admin");
+
+        return httpSecurity.build();
+    }
+
+    private void configCustomerApi(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeHttpRequests()
+                .requestMatchers("/customer/**")
+                .hasAnyAuthority("admin", "customer", "seller");
+
+    }
+
+    private void configSellerApi(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeHttpRequests()
+                .requestMatchers("/seller/**")
+                .hasAnyAuthority("admin", "seller");
+    }
+
+    private void configAdminApi(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeHttpRequests()
+                .requestMatchers("/admin/**")
+                .hasAnyAuthority("admin");
     }
 }
