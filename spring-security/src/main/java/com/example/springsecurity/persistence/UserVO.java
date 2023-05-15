@@ -7,18 +7,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserVO implements UserDetails {
     private final String username;
     private final String password;
-    private final List<SimpleGrantedAuthority> roles;
+    private final List<GrantedAuthority> roles;
     private final Boolean nonLocked;
     private final Boolean enabled;
 
     public UserVO(String username, String password, List<String> roles, LocalDateTime blockedAt, Boolean enabled) {
         this.username = username;
         this.password = password;
-        this.roles = roles.stream().map(SimpleGrantedAuthority::new).toList();
+        this.roles = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         this.nonLocked = LocalDateTime.now().minusMinutes(5).isAfter(blockedAt);
         this.enabled = enabled;
     }
