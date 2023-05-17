@@ -3,7 +3,6 @@ package com.example.springsecurity.prensentation.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,26 +16,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(
-            HttpSecurity httpSecurity,
-            UserDetailsService userDetailsService
-    ) throws Exception {
-        httpSecurity
-                .userDetailsService(userDetailsService)
-                .formLogin()
-                .successHandler(new FormLoginSuccessHandler())
-                .permitAll();
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        configAuthentication(httpSecurity);
+        configAuthorization(httpSecurity);
 
+        return httpSecurity.build();
+    }
+
+    private void configAuthentication(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .formLogin()
+                    .successHandler(new FormLoginSuccessHandler())
+                    .permitAll();
+    }
+
+    private void configAuthorization(HttpSecurity httpSecurity) throws Exception {
         configCustomerApi(httpSecurity);
         configSellerApi(httpSecurity);
         configAdminApi(httpSecurity);
-
-        httpSecurity
-                .authorizeHttpRequests()
-                .anyRequest()
-                .hasAnyAuthority("admin");
-
-        return httpSecurity.build();
     }
 
     private void configCustomerApi(HttpSecurity httpSecurity) throws Exception {
@@ -57,7 +54,7 @@ public class SecurityConfig {
     private void configAdminApi(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests()
-                .requestMatchers("/admin/**")
+                .anyRequest()
                 .hasAnyAuthority("admin");
     }
 }
