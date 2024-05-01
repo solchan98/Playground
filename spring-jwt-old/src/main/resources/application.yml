@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    url: jdbc:postgresql://localhost:54321/jwt
+    username: sol
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  redis:
+    port: 63790
+    host: localhost
+  jwt:
+    secret-key: SECRET_KEY
+    blacklist:
+      access-token: BlackList_AccessToken_
+
+server:
+  port: 8080
