@@ -1,0 +1,25 @@
+### Admin 권한 유저 로그인
+POST http://localhost:8080/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "admin@sol.com",
+  "plainPassword": "a1234567"
+}
+
+### Seller 권한 유저 로그인
+POST http://localhost:8080/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "seller@sol.com",
+  "plainPassword": "a1234567"
+}
+
+### Amdin 권한 API 호출
+GET http://localhost:8080/test/admin
+Authorization: Beare
+
+### Readonly 권한 API 호출
+GET http://localhost:8080/test/readonly
+Authorization: Bearer
