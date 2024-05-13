@@ -1,0 +1,12 @@
+### Admin 권한 유저 로그인
+POST http://localhost:8080/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "admin@sol.com",
+  "password": "a1234567"
+}
+
+### 인증/ 인가가 필요없는 API 호출
+GET http://localhost:8080/test/all
+Content-Type: application/json
