@@ -1,5 +1,6 @@
 package org.example.springsecurityjwt.login;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.ServletInputStream;
@@ -35,6 +36,8 @@ public class EmailPasswordAuthenticationConverter implements AuthenticationConve
             LoginRequest loginRequest = objectMapper.readValue(stringOfBody, LoginRequest.class);
             checkRequestData(loginRequest);
             return loginRequest;
+        } catch (JsonProcessingException jpe) {
+            throw new InsufficientAuthenticationException("로그인 요청 데이터를 확인하세요.");
         } catch (IOException e) {
             throw new RuntimeException("서버에서 문제가 발생하였습니다.", e);
         }

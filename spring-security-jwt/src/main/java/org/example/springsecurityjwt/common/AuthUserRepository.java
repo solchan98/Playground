@@ -1,12 +1,13 @@
 package org.example.springsecurityjwt.common;
 
 import java.util.Optional;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthUserRepository {
 
-    Optional<AuthUser> findById(long id);
+    Optional<UserDetails> findById(long id);
 
-    Optional<AuthUser> findByEmail(String email);
+    Optional<UserDetails> findByEmail(String email);
 
     boolean existById(long id);
 

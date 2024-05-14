@@ -2,6 +2,8 @@ package org.example.springsecurityjwt.login;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.springsecurityjwt.common.AuthenticationFailureHandlerImpl;
+import org.example.springsecurityjwt.common.TokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -15,14 +17,14 @@ public class EmailPasswordAuthenticationFilter extends AbstractAuthenticationPro
 
     private static final RequestMatcher requestMatcher = new AntPathRequestMatcher("/auth/sign-in", "POST");
 
-    public EmailPasswordAuthenticationFilter(AuthenticationConverter converter) {
+    public EmailPasswordAuthenticationFilter(AuthenticationConverter converter, TokenProvider tokenProvider) {
         super(requestMatcher);
-        this.setAuthenticationSuccessHandler(new EmailPasswordAuthenticationSuccessHandler());
-        this.setAuthenticationFailureHandler(new EmailPasswordAuthenticationFailureHandler());
+        this.setAuthenticationSuccessHandler(new EmailPasswordAuthenticationSuccessHandler(tokenProvider));
+        this.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
         this.converter = converter;
     }
 
-    public RequestMatcher requestMatcher() {
+    public static RequestMatcher requestMatcher() {
         return requestMatcher;
     }
 

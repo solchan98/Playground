@@ -1,25 +1,25 @@
 package org.example.springsecurityjwt.db;
 
 import java.util.Optional;
-import org.example.springsecurityjwt.common.AuthUser;
 import org.example.springsecurityjwt.common.AuthUserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class InMemoryAuthUserRepository implements AuthUserRepository {
 
     @Override
-    public Optional<AuthUser> findById(long id) {
+    public Optional<UserDetails> findById(long id) {
         UserEntity userEntity = Storage.users.get(id);
         if (userEntity == null) {
             return Optional.empty();
         }
 
-        return Optional.of(userEntity.toUser());
+        return Optional.of(userEntity);
     }
 
     @Override
-    public Optional<AuthUser> findByEmail(String email) {
+    public Optional<UserDetails> findByEmail(String email) {
         Long userId = Storage.userIdByEmail.get(email);
         if (userId == null) {
             return Optional.empty();
