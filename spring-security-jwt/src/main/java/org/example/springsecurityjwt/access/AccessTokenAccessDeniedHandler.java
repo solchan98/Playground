@@ -14,8 +14,6 @@ public class AccessTokenAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) {
-        System.out.println(request.getRequestURI());
-        System.out.println(accessDeniedException.getLocalizedMessage());
         String body = """
                         {
                             "message": "%s"
