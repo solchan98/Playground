@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.springsecurityjwt.db.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -27,9 +26,9 @@ public class AccessUser implements Authentication {
 
     private boolean authenticated;
 
-    public static AccessUser authenticated(UserEntity userEntity) {
-        return new AccessUser(userEntity.getId(), userEntity.getEmail(), userEntity.getName(),
-                userEntity.getAuthorities(), true);
+    public static AccessUser authenticated(AuthUserDetails userDetails) {
+        return new AccessUser(userDetails.getId(), userDetails.getEmail(), userDetails.getName(),
+                userDetails.getAuthorities(), true);
     }
 
     @Override

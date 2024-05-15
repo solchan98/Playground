@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.example.springsecurityjwt.access.AccessTokenProvider;
-import org.example.springsecurityjwt.refresh.RefreshTokenProvider;
 import org.example.springsecurityjwt.common.AccessUser;
-import org.example.springsecurityjwt.db.UserEntity;
+import org.example.springsecurityjwt.common.AuthUserDetails;
+import org.example.springsecurityjwt.refresh.RefreshTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -25,6 +25,7 @@ public class EmailPasswordAuthenticationSuccessHandler implements Authentication
     private final RefreshTokenProvider refreshTokenProvider;
 
     record LoginResponse(String accessToken, String refreshToken) {
+
         public LoginResponse(Authentication accessToken, Authentication refreshToken) {
             this(accessToken.getName(), refreshToken.getName());
         }
@@ -34,7 +35,7 @@ public class EmailPasswordAuthenticationSuccessHandler implements Authentication
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) {
         try {
-            AccessUser authenticated = AccessUser.authenticated((UserEntity) authentication.getPrincipal());
+            AccessUser authenticated = AccessUser.authenticated((AuthUserDetails) authentication.getPrincipal());
 
             Authentication accessToken = accessTokenProvider.createToken(authenticated);
             Authentication refreshToken = refreshTokenProvider.createToken(authenticated.getEmail());

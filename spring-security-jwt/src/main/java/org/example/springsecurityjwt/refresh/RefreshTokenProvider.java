@@ -5,9 +5,9 @@ import io.jsonwebtoken.Claims;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.example.springsecurityjwt.common.AccessUser;
+import org.example.springsecurityjwt.common.AuthUserDetails;
 import org.example.springsecurityjwt.common.BearerAuthenticationToken;
 import org.example.springsecurityjwt.common.TokenProvider;
-import org.example.springsecurityjwt.db.UserEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,13 +27,9 @@ public class RefreshTokenProvider extends TokenProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Claims claims = validateRefreshToken(authentication);
-
         String email = claims.get("email", String.class);
-        AccessUser accessUser = ((UserEntity) userDetailsService.loadUserByUsername(email))
-                .toAccessUser();
-        accessUser.setAuthenticated(true);
 
-        return accessUser;
+        return AccessUser.authenticated((AuthUserDetails) userDetailsService.loadUserByUsername(email));
     }
 
     private Claims validateRefreshToken(Authentication authentication) {
