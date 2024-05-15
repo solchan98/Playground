@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.springsecurityjwt.common.AuthUserDetails;
-import org.example.springsecurityjwt.common.SampleAuthority;
+import org.example.springsecurityjwt.auth.AuthUserDetails;
+import org.example.springsecurityjwt.auth.SampleAuthority;
 
 @Getter
 @AllArgsConstructor

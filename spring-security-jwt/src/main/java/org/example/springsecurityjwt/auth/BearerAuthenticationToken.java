@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.common;
+package org.example.springsecurityjwt.auth;
 
 import java.util.Collection;
 import java.util.Collections;

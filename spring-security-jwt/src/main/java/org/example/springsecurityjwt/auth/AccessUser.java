@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.common;
+package org.example.springsecurityjwt.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;

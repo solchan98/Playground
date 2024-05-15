@@ -1,8 +1,8 @@
 package org.example.springsecurityjwt.infrastructure;
 
 import java.util.Optional;
-import org.example.springsecurityjwt.common.AuthUserDetails;
-import org.example.springsecurityjwt.common.AuthUserRepository;
+import org.example.springsecurityjwt.auth.AuthUserDetails;
+import org.example.springsecurityjwt.auth.AuthUserRepository;
 import org.springframework.stereotype.Component;
 
 @Component

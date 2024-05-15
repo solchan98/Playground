@@ -7,7 +7,7 @@ import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.example.springsecurityjwt.common.BearerAuthenticationToken;
+import org.example.springsecurityjwt.auth.BearerAuthenticationToken;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;

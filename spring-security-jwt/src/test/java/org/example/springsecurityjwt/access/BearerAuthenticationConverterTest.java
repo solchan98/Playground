@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.catchThrowable;
 
 import java.util.stream.Stream;
-import org.example.springsecurityjwt.common.BearerAuthenticationConverter;
+import org.example.springsecurityjwt.auth.BearerAuthenticationConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

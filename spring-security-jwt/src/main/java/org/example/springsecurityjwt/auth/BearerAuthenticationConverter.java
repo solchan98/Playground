@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.common;
+package org.example.springsecurityjwt.auth;
 
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;

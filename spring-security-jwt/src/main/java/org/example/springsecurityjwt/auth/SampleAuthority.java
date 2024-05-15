@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.common;
+package org.example.springsecurityjwt.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

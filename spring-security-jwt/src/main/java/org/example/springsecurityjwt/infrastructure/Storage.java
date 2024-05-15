@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.example.springsecurityjwt.common.Role;
+import org.example.springsecurityjwt.auth.Role;
 
 public final class Storage {
 
