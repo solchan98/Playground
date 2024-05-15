@@ -2,9 +2,7 @@ package org.example.springsecurityjwt.db;
 
 import java.time.LocalDateTime;
 import org.example.springsecurityjwt.refresh.RefreshTokenRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
