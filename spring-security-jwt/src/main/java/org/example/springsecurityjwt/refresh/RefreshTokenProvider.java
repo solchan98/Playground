@@ -1,10 +1,10 @@
 
-package org.example.springsecurityjwt;
+package org.example.springsecurityjwt.refresh;
 
 import io.jsonwebtoken.Claims;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.example.springsecurityjwt.refresh.RefreshAuthenticationToken;
+import org.example.springsecurityjwt.common.TokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

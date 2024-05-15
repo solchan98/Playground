@@ -1,7 +1,7 @@
 package org.example.springsecurityjwt.db;
 
 import java.time.LocalDateTime;
-import org.example.springsecurityjwt.RefreshTokenRepository;
+import org.example.springsecurityjwt.refresh.RefreshTokenRepository;
 import org.example.springsecurityjwt.refresh.RefreshAuthenticationToken;
 import org.springframework.stereotype.Repository;
 

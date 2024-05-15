@@ -2,8 +2,8 @@ package org.example.springsecurityjwt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.springsecurityjwt.AccessTokenProvider;
-import org.example.springsecurityjwt.RefreshTokenProvider;
+import org.example.springsecurityjwt.access.AccessTokenProvider;
+import org.example.springsecurityjwt.refresh.RefreshTokenProvider;
 import org.example.springsecurityjwt.access.AccessTokenAccessDeniedHandler;
 import org.example.springsecurityjwt.access.BearerAuthenticationConverter;
 import org.example.springsecurityjwt.common.AuthenticationFailureHandlerImpl;

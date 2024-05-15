@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt;
+package org.example.springsecurityjwt.refresh;
 
 import org.example.springsecurityjwt.refresh.RefreshAuthenticationToken;
 

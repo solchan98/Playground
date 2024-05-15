@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt;
+package org.example.springsecurityjwt.access;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.example.springsecurityjwt.access.AccessAuthenticationToken;
+import org.example.springsecurityjwt.common.TokenProvider;
 import org.example.springsecurityjwt.common.AccessUser;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
