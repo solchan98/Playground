@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.db;
+package org.example.springsecurityjwt.infrastructure;
 
 import java.time.LocalDateTime;
 import org.example.springsecurityjwt.refresh.RefreshTokenRepository;

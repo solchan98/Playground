@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.db;
+package org.example.springsecurityjwt.infrastructure;
 
 import io.netty.util.internal.StringUtil;
 import java.time.Duration;

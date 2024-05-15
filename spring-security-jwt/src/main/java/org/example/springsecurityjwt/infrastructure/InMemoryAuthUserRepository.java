@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.db;
+package org.example.springsecurityjwt.infrastructure;
 
 import java.util.Optional;
 import org.example.springsecurityjwt.common.AuthUserDetails;

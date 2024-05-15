@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.db;
+package org.example.springsecurityjwt.infrastructure;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
