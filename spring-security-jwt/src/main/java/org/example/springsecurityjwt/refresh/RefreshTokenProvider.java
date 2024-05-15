@@ -26,20 +26,17 @@ public class RefreshTokenProvider extends TokenProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        Claims claims = validateRefreshToken(authentication);
-        String email = claims.get("email", String.class);
-
-        return AccessUser.authenticated((AuthUserDetails) userDetailsService.loadUserByUsername(email));
-    }
-
-    private Claims validateRefreshToken(Authentication authentication) {
         Claims claims = super.verify(authentication.getName());
         checkSupported(claims);
-        if (refreshTokenRepository.existsByToken(authentication.getName())) {
-            authentication.setAuthenticated(true);
+
+        String email = claims.get("email", String.class);
+        AuthUserDetails authUserDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(email);
+
+        if (!refreshTokenRepository.existsByToken(authentication.getName())) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
 
-        return claims;
+        return AccessUser.authenticated(authUserDetails);
     }
 
     public BearerAuthenticationToken createToken(String email) {
