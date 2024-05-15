@@ -1,4 +1,4 @@
-package org.example.springsecurityjwt.access;
+package org.example.springsecurityjwt.common;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 @AllArgsConstructor
-public class AccessAuthenticationToken implements Authentication {
+public class BearerAuthenticationToken implements Authentication {
 
     private final String token;
 
-    private static final boolean AUTHENTICATE = false;
+    private boolean authenticate = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -35,12 +35,12 @@ public class AccessAuthenticationToken implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        return AUTHENTICATE;
+        return authenticate;
     }
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        // do nothing
+        authenticate = isAuthenticated;
     }
 
     @Override

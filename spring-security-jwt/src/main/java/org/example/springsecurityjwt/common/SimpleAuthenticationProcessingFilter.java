@@ -1,24 +1,20 @@
-package org.example.springsecurityjwt.login;
+package org.example.springsecurityjwt.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.springsecurityjwt.config.RequestMatchers;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-public class EmailPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class SimpleAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private AuthenticationConverter converter;
 
-    public EmailPasswordAuthenticationFilter() {
-        super(RequestMatchers.LOGIN);
-    }
-
-    public EmailPasswordAuthenticationFilter(RequestMatcher requestMatcher) {
+    public SimpleAuthenticationProcessingFilter(RequestMatcher requestMatcher, AuthenticationConverter converter) {
         super(requestMatcher);
+        this.converter = converter;
     }
 
     public void setAuthenticationConverter(AuthenticationConverter converter) {

@@ -4,10 +4,14 @@ package org.example.springsecurityjwt.refresh;
 import io.jsonwebtoken.Claims;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.example.springsecurityjwt.common.AccessUser;
+import org.example.springsecurityjwt.common.BearerAuthenticationToken;
 import org.example.springsecurityjwt.common.TokenProvider;
+import org.example.springsecurityjwt.db.UserEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Component(value = "refreshTokenProvider")
@@ -18,40 +22,41 @@ public class RefreshTokenProvider extends TokenProvider {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private final UserDetailsService userDetailsService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        checkSupported(authentication);
-        RefreshAuthenticationToken refreshToken = (RefreshAuthenticationToken) authentication;
-        if (refreshTokenRepository.existsByToken(refreshToken)) {
-            refreshToken.setAuthenticated(true);
-        }
+        Claims claims = validateRefreshToken(authentication);
 
-        return authentication;
+        String email = claims.get("email", String.class);
+        AccessUser accessUser = ((UserEntity) userDetailsService.loadUserByUsername(email))
+                .toAccessUser();
+        accessUser.setAuthenticated(true);
+
+        return accessUser;
     }
 
-    @Override
-    public Claims verify(String token) {
-        Claims claims = super.verify(token);
-        if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
-            throw new BadCredentialsException("인증 정보를 확인하세요.");
+    private Claims validateRefreshToken(Authentication authentication) {
+        Claims claims = super.verify(authentication.getName());
+        checkSupported(claims);
+        if (refreshTokenRepository.existsByToken(authentication.getName())) {
+            authentication.setAuthenticated(true);
         }
 
         return claims;
     }
 
-    public RefreshAuthenticationToken createToken(String email) {
+    public BearerAuthenticationToken createToken(String email) {
         long tokenLive = 1000L * 60L * 60L; // 1h
-        String token = super.createToken(TOKEN_SUBJECT, Map.of("email", email), tokenLive);
-        RefreshAuthenticationToken refreshAuthenticationToken = new RefreshAuthenticationToken(email, token);
-        refreshTokenRepository.save(refreshAuthenticationToken, tokenLive);
+        BearerAuthenticationToken token = super.createToken(TOKEN_SUBJECT, Map.of("email", email), tokenLive);
+        refreshTokenRepository.save(email, token.getName(), tokenLive);
 
-        return refreshAuthenticationToken;
+        return token;
     }
 
     @Override
-    public void checkSupported(Authentication authentication) {
-        boolean supported = authentication instanceof RefreshAuthenticationToken;
-        if (!supported) {
+    public void checkSupported(Claims claims) {
+        if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
     }

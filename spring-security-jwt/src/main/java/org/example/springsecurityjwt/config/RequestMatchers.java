@@ -10,6 +10,8 @@ public final class RequestMatchers {
 
     public static final AntPathRequestMatcher LOGIN = new AntPathRequestMatcher("/login", HttpMethod.POST.name());
 
+    public static final AntPathRequestMatcher REFRESH_TOKEN = new AntPathRequestMatcher("/refresh", HttpMethod.POST.name());
+
     public static final AntPathRequestMatcher PERMIT_ALL = new AntPathRequestMatcher("/authenticated");
 
     public static final AntPathRequestMatcher OPEN_API = new AntPathRequestMatcher("/permit-all");

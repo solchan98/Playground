@@ -2,16 +2,17 @@ package org.example.springsecurityjwt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.springsecurityjwt.access.AccessTokenProvider;
-import org.example.springsecurityjwt.refresh.RefreshTokenProvider;
 import org.example.springsecurityjwt.access.AccessTokenAccessDeniedHandler;
-import org.example.springsecurityjwt.access.BearerAuthenticationConverter;
+import org.example.springsecurityjwt.access.AccessTokenProvider;
 import org.example.springsecurityjwt.common.AuthenticationFailureHandlerImpl;
+import org.example.springsecurityjwt.common.BearerAuthenticationConverter;
 import org.example.springsecurityjwt.common.Role;
+import org.example.springsecurityjwt.common.SimpleAuthenticationProcessingFilter;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationConverter;
-import org.example.springsecurityjwt.login.EmailPasswordAuthenticationFilter;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationSuccessHandler;
 import org.example.springsecurityjwt.login.SimplePasswordEncoder;
+import org.example.springsecurityjwt.refresh.RefreshTokenProvider;
+import org.example.springsecurityjwt.refresh.TokenRefreshSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ProviderManager;
@@ -44,6 +45,7 @@ public class SecurityConfig {
 
         setLoginFilter(httpSecurity);
         setAccessTokenFilter(httpSecurity);
+        setTokenRefreshFilter(httpSecurity);
         setPermissions(httpSecurity);
 
         return httpSecurity.exceptionHandling(eh -> eh.accessDeniedHandler(new AccessTokenAccessDeniedHandler()))
@@ -51,9 +53,10 @@ public class SecurityConfig {
     }
 
     private void setLoginFilter(HttpSecurity httpSecurity) {
-        EmailPasswordAuthenticationFilter emailPasswordAuthenticationFilter = new EmailPasswordAuthenticationFilter();
-        emailPasswordAuthenticationFilter.setAuthenticationConverter(
-                new EmailPasswordAuthenticationConverter(objectMapper));
+        SimpleAuthenticationProcessingFilter emailPasswordAuthenticationFilter = new SimpleAuthenticationProcessingFilter(
+                RequestMatchers.LOGIN,
+                new EmailPasswordAuthenticationConverter(objectMapper)
+        );
         emailPasswordAuthenticationFilter.setAuthenticationSuccessHandler(
                 new EmailPasswordAuthenticationSuccessHandler(objectMapper, accessTokenProvider, refreshTokenProvider));
         emailPasswordAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
@@ -69,18 +72,30 @@ public class SecurityConfig {
 
 
     private void setAccessTokenFilter(HttpSecurity httpSecurity) {
-        AuthenticationFilter jwtAuthenticationFilter = new AuthenticationFilter(accessTokenProvider,
+        AuthenticationFilter accessAuthenticationFilter = new AuthenticationFilter(accessTokenProvider,
                 new BearerAuthenticationConverter());
 
-        jwtAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(
-                new NegatedRequestMatcher(RequestMatchers.LOGIN),
+        accessAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(
                 new NegatedRequestMatcher(RequestMatchers.OPEN_API)
         ));
-        jwtAuthenticationFilter.setFailureHandler(new AuthenticationFailureHandlerImpl());
-        jwtAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {
+        accessAuthenticationFilter.setFailureHandler(new AuthenticationFailureHandlerImpl());
+        accessAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {
         });
 
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter, EmailPasswordAuthenticationFilter.class);
+        httpSecurity.addFilterAfter(accessAuthenticationFilter, SimpleAuthenticationProcessingFilter.class);
+    }
+
+    private void setTokenRefreshFilter(HttpSecurity httpSecurity) {
+        SimpleAuthenticationProcessingFilter tokenRefreshAuthenticationFilter = new SimpleAuthenticationProcessingFilter(
+                RequestMatchers.REFRESH_TOKEN,
+                new BearerAuthenticationConverter()
+        );
+        tokenRefreshAuthenticationFilter.setAuthenticationManager(refreshTokenProvider);
+        tokenRefreshAuthenticationFilter.setAuthenticationSuccessHandler(
+                new TokenRefreshSuccessHandler(objectMapper, accessTokenProvider));
+        tokenRefreshAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
+
+        httpSecurity.addFilterBefore(tokenRefreshAuthenticationFilter, SimpleAuthenticationProcessingFilter.class);
     }
 
     private void setPermissions(HttpSecurity httpSecurity) throws Exception {
@@ -92,7 +107,7 @@ public class SecurityConfig {
                 .hasAnyAuthority(Role.ADMIN.name(), Role.BUYER.name())
                 .requestMatchers(RequestMatchers.PERMIT_ALL)
                 .authenticated()
-                .requestMatchers(RequestMatchers.OPEN_API)
+                .requestMatchers(RequestMatchers.REFRESH_TOKEN)
                 .permitAll()
         );
     }

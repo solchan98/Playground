@@ -7,8 +7,9 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.example.springsecurityjwt.common.TokenProvider;
 import org.example.springsecurityjwt.common.AccessUser;
+import org.example.springsecurityjwt.common.BearerAuthenticationToken;
+import org.example.springsecurityjwt.common.TokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,10 +26,9 @@ public class AccessTokenProvider extends TokenProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
-            checkSupported(authentication);
+            Claims payload = verify(authentication.getName());
+            checkSupported(payload);
 
-            AccessAuthenticationToken accessToken = (AccessAuthenticationToken) authentication;
-            Claims payload = verify(accessToken.getName());
             AccessUser accessUser = objectMapper.readValue(payload.get("userInfo", String.class), AccessUser.class);
             accessUser.setAuthenticated(true);
 
@@ -40,23 +40,12 @@ public class AccessTokenProvider extends TokenProvider {
         }
     }
 
-    @Override
-    public Claims verify(String token) {
-        Claims claims = super.verify(token);
-        if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
-            throw new BadCredentialsException("인증 정보를 확인하세요.");
-        }
-
-        return claims;
-    }
-
-    public AccessAuthenticationToken createToken(AccessUser accessUser) {
+    public BearerAuthenticationToken createToken(AccessUser accessUser) {
         try {
             long tokenLive = 1000L * 60L * 60L; // 1h
             String userInfo = objectMapper.writeValueAsString(accessUser);
-            String token = super.createToken(TOKEN_SUBJECT, Map.of("userInfo", userInfo), tokenLive);
 
-            return new AccessAuthenticationToken(token);
+            return super.createToken(TOKEN_SUBJECT, Map.of("userInfo", userInfo), tokenLive);
         } catch (JsonProcessingException e) {
             // TODO 서버에러 예외 처리
             throw new RuntimeException(e);
@@ -64,9 +53,8 @@ public class AccessTokenProvider extends TokenProvider {
     }
 
     @Override
-    public void checkSupported(Authentication authentication) {
-        boolean supported = authentication instanceof AccessAuthenticationToken;
-        if (!supported) {
+    public void checkSupported(Claims claims) {
+        if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
     }

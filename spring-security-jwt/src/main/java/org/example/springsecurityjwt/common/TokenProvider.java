@@ -8,35 +8,36 @@ import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 
 public abstract class TokenProvider implements AuthenticationManager {
 
-    private SecretKey KEY = Keys.hmacShaKeyFor(
+    private SecretKey key = Keys.hmacShaKeyFor(
             Decoders.BASE64.decode("secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey"));
 
-    public String createToken(String subject, Map<String, Object> payload, long ttl) {
+    public BearerAuthenticationToken createToken(String subject, Map<String, Object> payload, long ttl) {
         Claims claims = Jwts.claims()
                 .subject(subject)
                 .add(payload)
                 .build();
         Date date = new Date();
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .claims(claims)
                 .issuedAt(date)
                 .expiration(new Date(date.getTime() + ttl))
-                .signWith(KEY)
+                .signWith(key)
                 .compact();
+
+        return new BearerAuthenticationToken(token, true);
     }
 
     public Claims verify(String token) {
         return Jwts.parser()
-                .verifyWith(KEY)
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    public abstract void checkSupported(Authentication authentication);
+    public abstract void checkSupported(Claims claims);
 }
