@@ -1,13 +1,15 @@
-package org.example.springsecurityjwt;
+package org.example.springsecurityjwt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.springsecurityjwt.access.AccessTokenAccessDeniedHandler;
 import org.example.springsecurityjwt.access.BearerAuthenticationConverter;
 import org.example.springsecurityjwt.common.AuthenticationFailureHandlerImpl;
+import org.example.springsecurityjwt.common.Role;
 import org.example.springsecurityjwt.common.TokenProvider;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationConverter;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationFilter;
+import org.example.springsecurityjwt.login.EmailPasswordAuthenticationSuccessHandler;
 import org.example.springsecurityjwt.login.SimplePasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,59 +22,39 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final ObjectMapper objectMapper;
+
+    private final TokenProvider tokenProvider;
+
     private final UserDetailsService userDetailsService;
 
-    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+        httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         setLoginFilter(httpSecurity);
         setAccessTokenFilter(httpSecurity);
+        setPermissions(httpSecurity);
 
-        OrRequestMatcher sellerRequestMatcher = new OrRequestMatcher(
-                new AntPathRequestMatcher("/seller", "GET"),
-                new AntPathRequestMatcher("/seller", "POST")
-        );
-
-        OrRequestMatcher buyerRequestMatcher = new OrRequestMatcher(
-                new AntPathRequestMatcher("/buyer", "GET"),
-                new AntPathRequestMatcher("/buyer", "POST")
-        );
-
-        OrRequestMatcher adminRequestMatcher = new OrRequestMatcher(new AntPathRequestMatcher("/admin", "GET"),
-                new AntPathRequestMatcher("/admin", "POST")
-        );
-
-        return httpSecurity
-                .exceptionHandling(eh -> eh.accessDeniedHandler(new AccessTokenAccessDeniedHandler()))
-                .authorizeHttpRequests(ahr -> ahr.requestMatchers(adminRequestMatcher)
-                        .hasAnyAuthority("ADMIN")
-                        .requestMatchers(sellerRequestMatcher)
-                        .hasAnyAuthority("SELLER", "ADMIN")
-                        .requestMatchers(buyerRequestMatcher)
-                        .hasAnyAuthority("BUYER", "ADMIN")
-                        .requestMatchers("/test/all")
-                        .permitAll()
-                )
+        return httpSecurity.exceptionHandling(eh -> eh.accessDeniedHandler(new AccessTokenAccessDeniedHandler()))
                 .build();
     }
 
     private void setLoginFilter(HttpSecurity httpSecurity) {
-        EmailPasswordAuthenticationFilter emailPasswordAuthenticationFilter = new EmailPasswordAuthenticationFilter(
-                new EmailPasswordAuthenticationConverter(objectMapper),
-                new TokenProvider(objectMapper));
+        EmailPasswordAuthenticationFilter emailPasswordAuthenticationFilter = new EmailPasswordAuthenticationFilter();
+        emailPasswordAuthenticationFilter.setAuthenticationConverter(
+                new EmailPasswordAuthenticationConverter(objectMapper));
+        emailPasswordAuthenticationFilter.setAuthenticationSuccessHandler(
+                new EmailPasswordAuthenticationSuccessHandler(tokenProvider));
+        emailPasswordAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
 
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
@@ -85,19 +67,31 @@ public class SecurityConfig {
 
 
     private void setAccessTokenFilter(HttpSecurity httpSecurity) {
-        TokenProvider tokenProvider = new TokenProvider(objectMapper);
         AuthenticationFilter jwtAuthenticationFilter = new AuthenticationFilter(tokenProvider,
                 new BearerAuthenticationConverter());
 
-        jwtAuthenticationFilter.setRequestMatcher(
-                new AndRequestMatcher(
-                        new NegatedRequestMatcher(EmailPasswordAuthenticationFilter.requestMatcher()),
-                        new NegatedRequestMatcher(new AntPathRequestMatcher("/test/all", "POST")),
-                        new NegatedRequestMatcher(new AntPathRequestMatcher("/test/all", "GET"))));
+        jwtAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(
+                new NegatedRequestMatcher(RequestMatchers.LOGIN),
+                new NegatedRequestMatcher(RequestMatchers.OPEN_API)
+        ));
         jwtAuthenticationFilter.setFailureHandler(new AuthenticationFailureHandlerImpl());
         jwtAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {
         });
 
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, EmailPasswordAuthenticationFilter.class);
+    }
+
+    private void setPermissions(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeHttpRequests(ahr -> ahr.requestMatchers(RequestMatchers.ADMIN)
+                .hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(RequestMatchers.SELLER)
+                .hasAnyAuthority(Role.ADMIN.name(), Role.SELLER.name())
+                .requestMatchers(RequestMatchers.BUYER)
+                .hasAnyAuthority(Role.ADMIN.name(), Role.BUYER.name())
+                .requestMatchers(RequestMatchers.PERMIT_ALL)
+                .authenticated()
+                .requestMatchers(RequestMatchers.OPEN_API)
+                .permitAll()
+        );
     }
 }

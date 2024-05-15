@@ -13,13 +13,14 @@ public class BearerAuthenticationConverter implements AuthenticationConverter {
 
     @Override
     public Authentication convert(HttpServletRequest request) {
-        String header = request.getHeader("Authorization").replace(" ", "");
-        if (StringUtil.isNullOrEmpty(header) || !StringUtils.startsWithIgnoreCase(header, AUTHENTICATION_SCHEME)) {
-            throw new BadCredentialsException("토큰 이상");
+        String header = request.getHeader("Authorization");
+        if (StringUtil.isNullOrEmpty(header)) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
 
-        if (header.equalsIgnoreCase(AUTHENTICATION_SCHEME)) {
-            throw new BadCredentialsException("토큰 이상");
+        header = header.replace(" ", "");
+        if (!StringUtils.startsWithIgnoreCase(header, AUTHENTICATION_SCHEME)) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
 
         return new JwtAuthentication(header.substring(AUTHENTICATION_SCHEME.length()));

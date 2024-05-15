@@ -49,8 +49,8 @@ public class TokenProvider implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String token = (String) authentication.getCredentials();
         try {
+            String token = (String) authentication.getCredentials();
             Claims payload = Jwts.parser()
                     .verifyWith(KEY)
                     .build()
