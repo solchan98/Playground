@@ -2,11 +2,12 @@ package org.example.springsecurityjwt.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.example.springsecurityjwt.AccessTokenProvider;
+import org.example.springsecurityjwt.RefreshTokenProvider;
 import org.example.springsecurityjwt.access.AccessTokenAccessDeniedHandler;
 import org.example.springsecurityjwt.access.BearerAuthenticationConverter;
 import org.example.springsecurityjwt.common.AuthenticationFailureHandlerImpl;
 import org.example.springsecurityjwt.common.Role;
-import org.example.springsecurityjwt.common.TokenProvider;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationConverter;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationFilter;
 import org.example.springsecurityjwt.login.EmailPasswordAuthenticationSuccessHandler;
@@ -30,10 +31,11 @@ public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
 
-    private final TokenProvider tokenProvider;
-
     private final UserDetailsService userDetailsService;
 
+    private final AccessTokenProvider accessTokenProvider;
+
+    private final RefreshTokenProvider refreshTokenProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -53,7 +55,7 @@ public class SecurityConfig {
         emailPasswordAuthenticationFilter.setAuthenticationConverter(
                 new EmailPasswordAuthenticationConverter(objectMapper));
         emailPasswordAuthenticationFilter.setAuthenticationSuccessHandler(
-                new EmailPasswordAuthenticationSuccessHandler(tokenProvider));
+                new EmailPasswordAuthenticationSuccessHandler(objectMapper, accessTokenProvider, refreshTokenProvider));
         emailPasswordAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
 
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -67,7 +69,7 @@ public class SecurityConfig {
 
 
     private void setAccessTokenFilter(HttpSecurity httpSecurity) {
-        AuthenticationFilter jwtAuthenticationFilter = new AuthenticationFilter(tokenProvider,
+        AuthenticationFilter jwtAuthenticationFilter = new AuthenticationFilter(accessTokenProvider,
                 new BearerAuthenticationConverter());
 
         jwtAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(

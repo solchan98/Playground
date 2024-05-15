@@ -23,6 +23,6 @@ public class BearerAuthenticationConverter implements AuthenticationConverter {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
 
-        return new JwtAuthentication(header.substring(AUTHENTICATION_SCHEME.length()));
+        return new AccessAuthenticationToken(header.substring(AUTHENTICATION_SCHEME.length()));
     }
 }

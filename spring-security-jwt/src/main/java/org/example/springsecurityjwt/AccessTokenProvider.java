@@ -1,0 +1,73 @@
+package org.example.springsecurityjwt;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.example.springsecurityjwt.access.AccessAuthenticationToken;
+import org.example.springsecurityjwt.common.AccessUser;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
+
+@Component(value = "accessTokenProvider")
+@RequiredArgsConstructor
+public class AccessTokenProvider extends TokenProvider {
+
+    private static final String TOKEN_SUBJECT = "access token";
+
+    private final ObjectMapper objectMapper;
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        try {
+            checkSupported(authentication);
+
+            AccessAuthenticationToken accessToken = (AccessAuthenticationToken) authentication;
+            Claims payload = verify(accessToken.getName());
+            AccessUser accessUser = objectMapper.readValue(payload.get("userInfo", String.class), AccessUser.class);
+            accessUser.setAuthenticated(true);
+
+            return accessUser;
+        } catch (MalformedJwtException | JsonProcessingException mje) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.", mje);
+        } catch (JwtException je) {
+            throw new BadCredentialsException(je.getMessage(), je);
+        }
+    }
+
+    @Override
+    public Claims verify(String token) {
+        Claims claims = super.verify(token);
+        if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.");
+        }
+
+        return claims;
+    }
+
+    public AccessAuthenticationToken createToken(AccessUser accessUser) {
+        try {
+            long tokenLive = 1000L * 60L * 60L; // 1h
+            String userInfo = objectMapper.writeValueAsString(accessUser);
+            String token = super.createToken(TOKEN_SUBJECT, Map.of("userInfo", userInfo), tokenLive);
+
+            return new AccessAuthenticationToken(token);
+        } catch (JsonProcessingException e) {
+            // TODO 서버에러 예외 처리
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void checkSupported(Authentication authentication) {
+        boolean supported = authentication instanceof AccessAuthenticationToken;
+        if (!supported) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.");
+        }
+    }
+}

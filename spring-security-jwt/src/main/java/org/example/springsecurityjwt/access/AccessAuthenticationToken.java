@@ -1,22 +1,21 @@
 package org.example.springsecurityjwt.access;
 
 import java.util.Collection;
+import java.util.Collections;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-public class JwtAuthentication implements Authentication {
+@AllArgsConstructor
+public class AccessAuthenticationToken implements Authentication {
 
     private final String token;
 
     private static final boolean AUTHENTICATE = false;
 
-    public JwtAuthentication(String token) {
-        this.token = token;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -41,10 +40,11 @@ public class JwtAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+        // do nothing
     }
 
     @Override
     public String getName() {
-        return null;
+        return (String) getCredentials();
     }
 }
