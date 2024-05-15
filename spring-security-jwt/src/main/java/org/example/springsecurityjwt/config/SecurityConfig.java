@@ -76,7 +76,7 @@ public class SecurityConfig {
                 new BearerAuthenticationConverter());
 
         accessAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(
-                new NegatedRequestMatcher(RequestMatchers.OPEN_API)
+                new NegatedRequestMatcher(RequestMatchers.PERMIT_ALL)
         ));
         accessAuthenticationFilter.setFailureHandler(new AuthenticationFailureHandlerImpl());
         accessAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {
@@ -105,9 +105,9 @@ public class SecurityConfig {
                 .hasAnyAuthority(Role.ADMIN.name(), Role.SELLER.name())
                 .requestMatchers(RequestMatchers.BUYER)
                 .hasAnyAuthority(Role.ADMIN.name(), Role.BUYER.name())
-                .requestMatchers(RequestMatchers.PERMIT_ALL)
+                .requestMatchers(RequestMatchers.AUTHENTICATED)
                 .authenticated()
-                .requestMatchers(RequestMatchers.REFRESH_TOKEN)
+                .requestMatchers(RequestMatchers.PERMIT_ALL)
                 .permitAll()
         );
     }
