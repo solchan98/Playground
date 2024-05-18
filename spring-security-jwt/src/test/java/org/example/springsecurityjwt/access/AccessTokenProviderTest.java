@@ -26,7 +26,7 @@ class AccessTokenProviderTest {
                 .build();
 
         // when
-        Throwable throwable = catchThrowable(() -> accessTokenProvider.checkSupported(mock));
+        Throwable throwable = catchThrowable(() -> accessTokenProvider.checkTokenType(mock));
 
         // then
         assertThat(throwable).isInstanceOf(BadCredentialsException.class)
@@ -42,7 +42,7 @@ class AccessTokenProviderTest {
                 .build();
 
         // when
-        assertThatCode(() -> accessTokenProvider.checkSupported(mock)).doesNotThrowAnyException();
+        assertThatCode(() -> accessTokenProvider.checkTokenType(mock)).doesNotThrowAnyException();
     }
 
     @Test

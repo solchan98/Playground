@@ -7,9 +7,9 @@ import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 
-public abstract class TokenProvider implements AuthenticationManager {
+public abstract class TokenProvider implements AuthenticationProvider {
 
     private SecretKey key = Keys.hmacShaKeyFor(
             Decoders.BASE64.decode("secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey"));
@@ -39,5 +39,5 @@ public abstract class TokenProvider implements AuthenticationManager {
                 .getPayload();
     }
 
-    public abstract void checkSupported(Claims claims);
+    public abstract void checkTokenType(Claims claims);
 }

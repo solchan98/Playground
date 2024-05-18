@@ -27,7 +27,7 @@ public class AccessTokenProvider extends TokenProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
             Claims payload = verify(authentication.getName());
-            checkSupported(payload);
+            checkTokenType(payload);
 
             AccessUser accessUser = objectMapper.readValue(payload.get("userInfo", String.class), AccessUser.class);
             accessUser.setAuthenticated(true);
@@ -38,6 +38,11 @@ public class AccessTokenProvider extends TokenProvider {
         } catch (JwtException je) {
             throw new BadCredentialsException(je.getMessage(), je);
         }
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return (BearerAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
     public BearerAuthenticationToken createToken(AccessUser accessUser) {
@@ -53,7 +58,7 @@ public class AccessTokenProvider extends TokenProvider {
     }
 
     @Override
-    public void checkSupported(Claims claims) {
+    public void checkTokenType(Claims claims) {
         if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
