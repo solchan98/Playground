@@ -27,7 +27,7 @@ public class RefreshTokenProvider extends TokenProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Claims claims = super.verify(authentication.getName());
-        checkSupported(claims);
+        checkTokenType(claims);
 
         String email = claims.get("email", String.class);
         AuthUserDetails authUserDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(email);
@@ -39,6 +39,11 @@ public class RefreshTokenProvider extends TokenProvider {
         return AccessUser.authenticated(authUserDetails);
     }
 
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return (BearerAuthenticationToken.class.isAssignableFrom(authentication));
+    }
+
     public BearerAuthenticationToken createToken(String email) {
         long tokenLive = 1000L * 60L * 60L; // 1h
         BearerAuthenticationToken token = super.createToken(TOKEN_SUBJECT, Map.of("email", email), tokenLive);
@@ -48,7 +53,7 @@ public class RefreshTokenProvider extends TokenProvider {
     }
 
     @Override
-    public void checkSupported(Claims claims) {
+    public void checkTokenType(Claims claims) {
         if (!TOKEN_SUBJECT.equals(claims.getSubject())) {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }

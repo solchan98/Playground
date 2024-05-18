@@ -72,7 +72,7 @@ public class SecurityConfig {
 
 
     private void setAccessTokenFilter(HttpSecurity httpSecurity) {
-        AuthenticationFilter accessAuthenticationFilter = new AuthenticationFilter(accessTokenProvider,
+        AuthenticationFilter accessAuthenticationFilter = new AuthenticationFilter(new ProviderManager(accessTokenProvider),
                 new BearerAuthenticationConverter());
 
         accessAuthenticationFilter.setRequestMatcher(new AndRequestMatcher(
@@ -90,7 +90,7 @@ public class SecurityConfig {
                 RequestMatchers.REFRESH_TOKEN,
                 new BearerAuthenticationConverter()
         );
-        tokenRefreshAuthenticationFilter.setAuthenticationManager(refreshTokenProvider);
+        tokenRefreshAuthenticationFilter.setAuthenticationManager(new ProviderManager(refreshTokenProvider));
         tokenRefreshAuthenticationFilter.setAuthenticationSuccessHandler(
                 new TokenRefreshSuccessHandler(objectMapper, accessTokenProvider));
         tokenRefreshAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());

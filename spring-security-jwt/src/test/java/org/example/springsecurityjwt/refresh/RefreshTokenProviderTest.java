@@ -33,7 +33,7 @@ class RefreshTokenProviderTest {
                 .build();
 
         // when
-        Throwable throwable = catchThrowable(() -> refreshTokenProvider.checkSupported(mock));
+        Throwable throwable = catchThrowable(() -> refreshTokenProvider.checkTokenType(mock));
 
         // then
         assertThat(throwable).isInstanceOf(BadCredentialsException.class)
@@ -49,7 +49,7 @@ class RefreshTokenProviderTest {
                 .build();
 
         // when
-        assertThatCode(() -> refreshTokenProvider.checkSupported(mock)).doesNotThrowAnyException();
+        assertThatCode(() -> refreshTokenProvider.checkTokenType(mock)).doesNotThrowAnyException();
     }
 
     @Test
