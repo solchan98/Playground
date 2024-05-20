@@ -1,6 +1,7 @@
 package org.example.springsecurityjwt.infrastructure;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.example.springsecurityjwt.refresh.RefreshTokenRepository;
 
 public class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
@@ -14,13 +15,12 @@ public class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
     }
 
     @Override
-    public boolean existsByToken(String token) {
-        String value = Storage.refreshTokens.get(token);
-        if (value == null) {
-            return false;
+    public Optional<String> findByEmail(String email) {
+        boolean contains = Storage.refreshTokens.containsKey(email);
+        if (!contains) {
+            return Optional.empty();
         }
 
-        LocalDateTime localDateTime = Storage.refreshTokenTtl.get(value);
-        return !localDateTime.isBefore(LocalDateTime.now());
+        return Optional.of(Storage.refreshTokens.get(email));
     }
 }

@@ -3,6 +3,7 @@ package org.example.springsecurityjwt.refresh;
 
 import io.jsonwebtoken.Claims;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.example.springsecurityjwt.auth.AccessUser;
 import org.example.springsecurityjwt.auth.AuthUserDetails;
@@ -32,7 +33,13 @@ public class RefreshTokenProvider extends TokenProvider {
         String email = claims.get("email", String.class);
         AuthUserDetails authUserDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(email);
 
-        if (!refreshTokenRepository.existsByToken(authentication.getName())) {
+        boolean empty = refreshTokenRepository.findByEmail(email)
+                .filter(token -> Objects.equals(token, authentication.getName()))
+                .stream()
+                .findAny()
+                .isEmpty();
+
+        if (empty) {
             throw new BadCredentialsException("인증 정보를 확인하세요.");
         }
 

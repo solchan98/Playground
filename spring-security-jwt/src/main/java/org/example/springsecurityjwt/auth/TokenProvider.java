@@ -1,6 +1,7 @@
 package org.example.springsecurityjwt.auth;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 
 public abstract class TokenProvider implements AuthenticationProvider {
 
@@ -32,11 +34,15 @@ public abstract class TokenProvider implements AuthenticationProvider {
     }
 
     public Claims verify(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException e) {
+            throw new BadCredentialsException("인증 정보를 확인하세요.", e);
+        }
     }
 
     public abstract void checkTokenType(Claims claims);

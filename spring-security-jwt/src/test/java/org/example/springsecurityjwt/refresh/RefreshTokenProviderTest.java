@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.util.List;
+import java.util.Optional;
 import org.example.springsecurityjwt.auth.AuthUserDetails;
 import org.example.springsecurityjwt.auth.BearerAuthenticationToken;
 import org.junit.jupiter.api.DisplayName;
@@ -57,11 +58,10 @@ class RefreshTokenProviderTest {
     void authenticate() {
         // given
         String email = "seller@sol.com";
-        BearerAuthenticationToken bearerAuthenticationToken = new BearerAuthenticationToken(
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWZyZXNoIHRva2VuIiwiZW1haWwiOiJzZWxsZXJAc29sLmNvbSIsImlhdCI6MTcxNTc3MDk5OX0.EnIYLNpBSBKxkI1Ylps2jZJlXHMUkaCK_q_mMe4lOqY",
-                false);
-        given(refreshTokenRepository.existsByToken(bearerAuthenticationToken.getName()))
-                .willReturn(true);
+        String stringToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWZyZXNoIHRva2VuIiwiZW1haWwiOiJzZWxsZXJAc29sLmNvbSIsImlhdCI6MTcxNTc3MDk5OX0.EnIYLNpBSBKxkI1Ylps2jZJlXHMUkaCK_q_mMe4lOqY";
+        Authentication bearerAuthenticationToken = new BearerAuthenticationToken(stringToken, false);
+        given(refreshTokenRepository.findByEmail(email))
+                .willReturn(Optional.of(stringToken));
         AuthUserDetails mockUserDetails = new AuthUserDetails(1L, email, "seller", "a1234567******", List.of());
         given(userDetailsService.loadUserByUsername(email))
                 .willReturn(mockUserDetails);
