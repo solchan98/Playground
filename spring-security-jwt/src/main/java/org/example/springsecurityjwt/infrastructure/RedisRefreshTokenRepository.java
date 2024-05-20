@@ -1,7 +1,7 @@
 package org.example.springsecurityjwt.infrastructure;
 
-import io.netty.util.internal.StringUtil;
 import java.time.Duration;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.springsecurityjwt.refresh.RefreshTokenRepository;
 import org.springframework.stereotype.Repository;
@@ -14,11 +14,11 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public void save(String email, String token, long ttl) {
-        redisClient.setValues(token, email, Duration.ofMillis(ttl));
+        redisClient.setValues(email, token, Duration.ofMillis(ttl));
     }
 
     @Override
-    public boolean existsByToken(String token) {
-        return !StringUtil.isNullOrEmpty(redisClient.getValues(token));
+    public Optional<String> findByEmail(String email) {
+        return Optional.ofNullable(redisClient.getValues(email));
     }
 }
