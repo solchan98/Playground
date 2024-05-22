@@ -1,6 +1,7 @@
 package org.example.springsecurityjwt.infrastructure;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.example.springsecurityjwt.refresh.RefreshTokenRepository;
 
@@ -10,7 +11,7 @@ public class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
     public void save(String email, String token, long ttl) {
         Storage.refreshTokens.put(email, token);
         LocalDateTime expireTime = LocalDateTime.now()
-                .plusNanos(ttl);
+                .plus(ttl, ChronoUnit.MILLIS);
         Storage.refreshTokenTtl.put(token, expireTime);
     }
 
@@ -21,6 +22,12 @@ public class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
             return Optional.empty();
         }
 
-        return Optional.of(Storage.refreshTokens.get(email));
+        String token = Storage.refreshTokens.get(email);
+        LocalDateTime expiredTime = Storage.refreshTokenTtl.get(token);
+        if (LocalDateTime.now().isAfter(expiredTime)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(token);
     }
 }
