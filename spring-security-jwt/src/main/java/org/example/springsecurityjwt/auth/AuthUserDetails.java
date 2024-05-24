@@ -2,11 +2,13 @@ package org.example.springsecurityjwt.auth;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class AuthUserDetails implements UserDetails {
 
     private Long id;
