@@ -1,4 +1,4 @@
-package com.example.springbeen;
+package com.example.springbean;
 
 public class Store {
     private String name;

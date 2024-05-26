@@ -1,9 +1,10 @@
 # 스프링의 의존관계 지동 주입 방식
 
 ### 생성자 주입 방식
+
 ```java
 
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class Service {
     @Autowired
     public Service(StoreService storeService) {
         this.storeService = storeService;
-    } 
+    }
 }
 ```
 - 생성자를 통해 의존관계를 주입 받는다.
@@ -26,7 +27,7 @@ public class Service {
 ### 수정자 주입
 
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,7 @@ public class Service {
 ### 필드 주입
 
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +67,7 @@ public class Service {
 ### 여러 구현체를 한번에 주입 받기
 
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -101,22 +102,23 @@ public class Service {
 만약, 인터페이스를 구현한 여러 구현체를 모두 사용해야 한다면 List와 Map으로 주입받아 활용할 수 있다.
 
 ### 여러 구현체 중 특정 빈 주입 받기
+
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 @Qualifier("storeServiceImpl")
 public class StoreServiceImpl implements StoreService {
-    
+
 }
 ```
 #### `@Autowired`
+
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -137,7 +139,7 @@ public class Service {
 #### `@Qualifier`
 
 ```java
-import com.example.springbeen.StoreService;
+import com.example.springbean.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.example.springbeen;
+package com.example.springbean.생명주기;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
