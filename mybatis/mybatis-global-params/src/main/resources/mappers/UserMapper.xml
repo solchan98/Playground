@@ -5,21 +5,27 @@
 
 <mapper namespace="com.example.mybatisglobalparams.mappers.UserMapper">
 
+    <insert id="save" parameterType="com.example.mybatisglobalparams.entity.User" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO user
+        VALUES (#{user.id},
+                #{user.username},
+                #{user.countryCode})
+    </insert>
+
     <select id="findById" parameterType="map" resultType="com.example.mybatisglobalparams.entity.User">
-        SELECT
-            id,
-            username,
-            country_code
+        SELECT id,
+               username,
+               country_code
         FROM user
         WHERE id = #{id}
-         AND country_code = #{countryCode}
+          AND country_code = #{countryCode}
     </select>
 
     <select id="findByIdAndUserName" parameterType="map" resultType="com.example.mybatisglobalparams.entity.User">
-        SELECT
-            id,
-            username,
-            country_code
+        SELECT id,
+               username,
+               country_code
         FROM user
         WHERE id = #{id}
           AND username = #{username}
