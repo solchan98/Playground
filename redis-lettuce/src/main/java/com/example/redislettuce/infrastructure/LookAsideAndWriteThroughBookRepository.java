@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CacheBookRepository implements BookRepository {
+public class LookAsideAndWriteThroughBookRepository implements BookRepository {
 
     private final BookInMemoryStorage bookInMemoryStorage;
 

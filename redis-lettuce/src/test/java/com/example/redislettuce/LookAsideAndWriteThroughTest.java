@@ -4,7 +4,7 @@ import com.example.redislettuce.common.Cacheable;
 import com.example.redislettuce.domain.Book;
 import com.example.redislettuce.domain.BookRepository;
 import com.example.redislettuce.infrastructure.BookInMemoryStorage;
-import com.example.redislettuce.infrastructure.CacheBookRepository;
+import com.example.redislettuce.infrastructure.LookAsideAndWriteThroughBookRepository;
 import com.example.redislettuce.infrastructure.CacheMaster;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class LookAsideAndWriteThroughTest {
 
     @Test
     void lookAsideAndWriteThrough() {
-        BookRepository bookRepository = new CacheBookRepository(spyBookInMemoryStorage, redisTemplate);
+        BookRepository bookRepository = new LookAsideAndWriteThroughBookRepository(spyBookInMemoryStorage, redisTemplate);
 
         Book book = new Book(
                 "978-89-01-12345-6",
