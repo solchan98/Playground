@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class CacheBookRepositoryTest {
+class LookAsideAndWriteThroughTest {
 
     @Autowired
     RedisTemplate<String, Cacheable> redisTemplate;
