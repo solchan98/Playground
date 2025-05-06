@@ -26,7 +26,7 @@ class CacheBookRepositoryTest {
 
 
     @Test
-    void contextLoads() {
+    void lookAsideAndWriteThrough() {
         BookRepository bookRepository = new CacheBookRepository(spyBookInMemoryStorage, redisTemplate);
 
         Book book = new Book(
@@ -43,12 +43,16 @@ class CacheBookRepositoryTest {
 
         bookRepository.save(book);
 
-        /* Cache 조회 -> DB 조회 X */
+        /* Cache 조회 -> Cache Hit -> DB 조회 X */
         bookRepository.findByIsbn(book.getIsbn());
         verify(spyBookInMemoryStorage, times(0)).getBook(book.getIsbn());
 
-        /* Cache Clear -> DB 조회 O */
+        /* Cache Clear -> Cache Miss -> DB 조회 O */
         cacheMaster.clear(book.getIsbn());
+        bookRepository.findByIsbn(book.getIsbn());
+        verify(spyBookInMemoryStorage, times(1)).getBook(book.getIsbn());
+
+        /* Cache 조회 -> Cache Hit -> DB 조회 X */
         bookRepository.findByIsbn(book.getIsbn());
         verify(spyBookInMemoryStorage, times(1)).getBook(book.getIsbn());
     }
