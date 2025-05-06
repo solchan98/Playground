@@ -4,7 +4,7 @@ import com.example.redislettuce.common.Cacheable;
 import com.example.redislettuce.domain.Book;
 import com.example.redislettuce.domain.BookRepository;
 import com.example.redislettuce.infrastructure.BookInMemoryStorage;
-import com.example.redislettuce.infrastructure.CacheBookRepository;
+import com.example.redislettuce.infrastructure.LookAsideAndWriteThroughBookRepository;
 import com.example.redislettuce.infrastructure.CacheMaster;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class CacheBookRepositoryTest {
+class LookAsideAndWriteThroughTest {
 
     @Autowired
     RedisTemplate<String, Cacheable> redisTemplate;
@@ -26,8 +26,8 @@ class CacheBookRepositoryTest {
 
 
     @Test
-    void contextLoads() {
-        BookRepository bookRepository = new CacheBookRepository(spyBookInMemoryStorage, redisTemplate);
+    void lookAsideAndWriteThrough() {
+        BookRepository bookRepository = new LookAsideAndWriteThroughBookRepository(spyBookInMemoryStorage, redisTemplate);
 
         Book book = new Book(
                 "978-89-01-12345-6",
@@ -43,12 +43,16 @@ class CacheBookRepositoryTest {
 
         bookRepository.save(book);
 
-        /* Cache 조회 -> DB 조회 X */
+        /* Cache 조회 -> Cache Hit -> DB 조회 X */
         bookRepository.findByIsbn(book.getIsbn());
         verify(spyBookInMemoryStorage, times(0)).getBook(book.getIsbn());
 
-        /* Cache Clear -> DB 조회 O */
+        /* Cache Clear -> Cache Miss -> DB 조회 O */
         cacheMaster.clear(book.getIsbn());
+        bookRepository.findByIsbn(book.getIsbn());
+        verify(spyBookInMemoryStorage, times(1)).getBook(book.getIsbn());
+
+        /* Cache 조회 -> Cache Hit -> DB 조회 X */
         bookRepository.findByIsbn(book.getIsbn());
         verify(spyBookInMemoryStorage, times(1)).getBook(book.getIsbn());
     }

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CacheBookRepository implements BookRepository {
+public class LookAsideAndWriteThroughBookRepository implements BookRepository {
 
     private final BookInMemoryStorage bookInMemoryStorage;
 
@@ -28,6 +28,12 @@ public class CacheBookRepository implements BookRepository {
         redisTemplate.opsForValue().set(isbn, dbBook);
 
         return Optional.of(dbBook);
+    }
+
+    @Override
+    @CachedWithLock
+    public Optional<Book> findByIsbnWithDistributedLock(String isbn) {
+        return findByIsbn(isbn);
     }
 
     @Override
