@@ -31,6 +31,12 @@ public class LookAsideAndWriteThroughBookRepository implements BookRepository {
     }
 
     @Override
+    @CachedWithLock
+    public Optional<Book> findByIsbnWithDistributedLock(String isbn) {
+        return findByIsbn(isbn);
+    }
+
+    @Override
     public Book save(Book book) {
         Book dbBook = bookInMemoryStorage.saveBook(book);
         redisTemplate.opsForValue().set(book.getIsbn(), dbBook);

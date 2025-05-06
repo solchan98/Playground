@@ -6,6 +6,8 @@ public interface BookRepository {
 
     Optional<Book> findByIsbn(String isbn);
 
+    Optional<Book> findByIsbnWithDistributedLock(String isbn);
+
     Book save(Book book);
 
 }
